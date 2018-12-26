@@ -1,6 +1,7 @@
 package org.bitspilani.ssms.messapp
 
 import android.app.Application
+import com.jakewharton.threetenabp.AndroidThreeTen
 import org.bitspilani.ssms.messapp.di.app.AppComponent
 import org.bitspilani.ssms.messapp.di.app.AppModule
 import org.bitspilani.ssms.messapp.di.app.DaggerAppComponent
@@ -18,5 +19,7 @@ class MessApp : Application() {
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()
+
+        AndroidThreeTen.init(this)
     }
 }
