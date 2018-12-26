@@ -2,8 +2,9 @@ package org.bitspilani.ssms.messapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import kotlinx.android.synthetic.main.act_main.*
@@ -18,6 +19,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
+        navHostFRA.findNavController().addOnDestinationChangedListener { _, destination, _ ->
+            val currentItem = when(destination.id) {
+                R.id.menuFragment   -> 2
+                else                -> 2
+            }
+            if(bottomNavAHB.currentItem != currentItem) {
+                bottomNavAHB.setCurrentItem(currentItem, false)
+            }
+        }
+
         bottomNavAHB.apply {
             mapOf(
                 "Profile" to R.drawable.ic_profile_24dp_24dp,
@@ -46,13 +57,21 @@ class MainActivity : AppCompatActivity() {
                     return@setOnTabSelectedListener false
                 }
 
-                when(position) {
-                    0 -> Toast.makeText(this@MainActivity, "Profile", Toast.LENGTH_SHORT).show()
-                    1 -> Toast.makeText(this@MainActivity, "Grubs", Toast.LENGTH_SHORT).show()
-                    2 -> Toast.makeText(this@MainActivity, "Menu", Toast.LENGTH_SHORT).show()
-                    3 -> Toast.makeText(this@MainActivity, "Notices", Toast.LENGTH_SHORT).show()
-                    4 -> Toast.makeText(this@MainActivity, "More", Toast.LENGTH_SHORT).show()
+                val options = NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setPopUpTo(R.id.menuFragment, false).build()
+
+                val destination = when(position) {
+                    0    -> R.id.menuFragment
+                    1    -> R.id.menuFragment
+                    2    -> R.id.menuFragment
+                    3    -> R.id.menuFragment
+                    4    -> R.id.menuFragment
+                    else -> throw IllegalStateException("BottomNav with position: $position")
                 }
+
+                navHostFRA.findNavController().navigate(destination, null, options)
+
                 return@setOnTabSelectedListener true
             }
         }

@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nv_main"
-    app:startDestination="@id/tempFragment">
+    app:startDestination="@id/menuFragment">
 
     <fragment
-        android:id="@+id/tempFragment"
-        android:name="org.bitspilani.ssms.messapp.screens.temp.TempFragment"
-        android:label="TempFragment"
-        tools:layout="@layout/fra_temp" />
+        android:id="@+id/menuFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.menu.view.MenuFragment"
+        android:label="MenuController" />
 </navigation>
