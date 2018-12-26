@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nv_main"
+    app:startDestination="@id/tempFragment">
+
+    <fragment
+        android:id="@+id/tempFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.temp.TempFragment"
+        android:label="TempFragment"
+        tools:layout="@layout/fra_temp" />
+</navigation>
