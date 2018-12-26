@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootPOV"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sh_rounded_rectangle_wht01_16dp"
+    android:minWidth="240dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/cabin"
+        android:text="Types of Notices"
+        android:textAlignment="center"
+        android:textColor="@color/blk01"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/dot1POV"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/sh_oval"
+        android:backgroundTint="@color/pnk02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
+
+    <TextView
+        android:id="@+id/priority1LBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin"
+        android:includeFontPadding="false"
+        android:text="Critical"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dot1POV"
+        app:layout_constraintStart_toStartOf="@+id/priority2LBL"
+        app:layout_constraintTop_toTopOf="@+id/dot1POV" />
+
+    <View
+        android:id="@+id/dot2POV"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/sh_oval"
+        android:backgroundTint="@color/pnk03"
+        app:layout_constraintStart_toStartOf="@+id/dot1POV"
+        app:layout_constraintTop_toBottomOf="@+id/dot1POV" />
+
+    <TextView
+        android:id="@+id/priority2LBL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/cabin"
+        android:includeFontPadding="false"
+        android:text="Important"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dot2POV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dot2POV"
+        app:layout_constraintTop_toTopOf="@+id/dot2POV" />
+
+    <View
+        android:id="@+id/dot3POV"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/sh_oval"
+        android:backgroundTint="@color/pnk04"
+        app:layout_constraintStart_toStartOf="@+id/dot2POV"
+        app:layout_constraintTop_toBottomOf="@+id/dot2POV" />
+
+    <TextView
+        android:id="@+id/priority3LBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin"
+        android:includeFontPadding="false"
+        android:text="Normal"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dot3POV"
+        app:layout_constraintStart_toStartOf="@+id/priority2LBL"
+        app:layout_constraintTop_toTopOf="@+id/dot3POV" />
+
+    <ImageView
+        android:id="@+id/closeBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:tint="@color/pnk01"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dot3POV"
+        app:srcCompat="@drawable/ic_close_32dp_32dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
