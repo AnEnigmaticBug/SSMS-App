@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         navHostFRA.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             val currentItem = when(destination.id) {
                 R.id.menuFragment   -> 2
+                R.id.noticeFragment -> 3
                 else                -> 2
             }
             if(bottomNavAHB.currentItem != currentItem) {
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                     0    -> R.id.menuFragment
                     1    -> R.id.menuFragment
                     2    -> R.id.menuFragment
-                    3    -> R.id.menuFragment
+                    3    -> R.id.noticeFragment
                     4    -> R.id.menuFragment
                     else -> throw IllegalStateException("BottomNav with position: $position")
                 }

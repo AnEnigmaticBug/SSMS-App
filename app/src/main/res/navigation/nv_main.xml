@@ -8,5 +8,14 @@
     <fragment
         android:id="@+id/menuFragment"
         android:name="org.bitspilani.ssms.messapp.screens.menu.view.MenuFragment"
-        android:label="MenuController" />
+        android:label="MenuController">
+        <action
+            android:id="@+id/action_menuFragment_to_noticeFragment"
+            app:destination="@id/noticeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/noticeFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.notice.view.NoticeFragment"
+        android:label="NoticeFragment"
+        tools:layout="@layout/fra_notice" />
 </navigation>
