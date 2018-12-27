@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
+import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.data.repo.NoticeRepository
 import org.bitspilani.ssms.messapp.screens.notice.view.model.ViewLayerNotice
 import org.bitspilani.ssms.messapp.util.set
 import org.bitspilani.ssms.messapp.util.toMut
 import org.threeten.bp.LocalDateTime
 
-class NoticeViewModel(nRepo: NoticeRepository) : ViewModel() {
+class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
 
     val notices: LiveData<List<ViewLayerNotice>> = MutableLiveData()
 
@@ -37,6 +38,15 @@ class NoticeViewModel(nRepo: NoticeRepository) : ViewModel() {
 
                 }
             ))
+    }
+
+
+    fun onDeleteNoticeByIdAction(id: Id) {
+        nRepo.deleteNoticeById(id).subscribe()
+    }
+
+    fun onDeleteAllNoticesAction() {
+        nRepo.deleteAllNotices().subscribe()
     }
 
 
