@@ -3,6 +3,7 @@ package org.bitspilani.ssms.messapp.screens.notice.data.repo
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.core.model.Notice
 import org.bitspilani.ssms.messapp.screens.notice.core.model.Priority
 import org.bitspilani.ssms.messapp.screens.notice.data.room.NoticesDao
@@ -32,5 +33,17 @@ class NoticeRepositoryImpl(private val noticesDao: NoticesDao) : NoticeRepositor
             .subscribeOn(Schedulers.io())
             .map { it.map { Notice(it.id, it.heading, it.content, it.priority, it.datetime) } }
             .toObservable()
+    }
+
+    override fun deleteAllNotices(): Completable {
+        return Completable.fromAction {
+            noticesDao.deleteAllNotices()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun deleteNoticeById(id: Id): Completable {
+        return Completable.fromAction {
+            noticesDao.deleteNoticeById(id)
+        }.subscribeOn(Schedulers.io())
     }
 }
