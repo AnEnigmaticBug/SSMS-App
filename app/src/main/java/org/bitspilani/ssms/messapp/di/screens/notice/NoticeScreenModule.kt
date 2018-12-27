@@ -11,7 +11,7 @@ import org.bitspilani.ssms.messapp.screens.shared.data.room.setup.AppDatabase
 class NoticeScreenModule {
 
     @Provides
-    fun providesNoticeRepository(): NoticeRepository = NoticeRepositoryImpl()
+    fun providesNoticeRepository(noticesDao: NoticesDao): NoticeRepository = NoticeRepositoryImpl(noticesDao)
 
     @Provides
     fun providesNoticesDao(appDatabase: AppDatabase): NoticesDao = appDatabase.noticesDao()
