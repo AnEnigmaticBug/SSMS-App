@@ -28,6 +28,7 @@
         tools:text="Change in dinner timings" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -59,11 +60,22 @@
         android:id="@+id/closeBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
         android:layout_marginBottom="16dp"
         android:tint="@color/pnk01"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_close_32dp_32dp" />
+
+    <ImageView
+        android:id="@+id/deleteBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:tint="@color/pnk01"
+        app:layout_constraintBottom_toBottomOf="@+id/closeBTN"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/closeBTN"
+        app:srcCompat="@drawable/ic_delete_32dp_32dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
