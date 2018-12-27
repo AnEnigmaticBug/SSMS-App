@@ -12,10 +12,18 @@
         <action
             android:id="@+id/action_menuFragment_to_noticeFragment"
             app:destination="@id/noticeFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_moreFragment"
+            app:destination="@id/moreFragment" />
     </fragment>
     <fragment
         android:id="@+id/noticeFragment"
         android:name="org.bitspilani.ssms.messapp.screens.notice.view.NoticeFragment"
         android:label="NoticeFragment"
         tools:layout="@layout/fra_notice" />
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.more.view.MoreFragment"
+        android:label="MoreFragment"
+        tools:layout="@layout/fra_more"/>
 </navigation>

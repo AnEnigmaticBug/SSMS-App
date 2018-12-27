@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
             val currentItem = when(destination.id) {
                 R.id.menuFragment   -> 2
                 R.id.noticeFragment -> 3
+                R.id.moreFragment   -> 4
                 else                -> 2
             }
             if(bottomNavAHB.currentItem != currentItem) {
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     1    -> R.id.menuFragment
                     2    -> R.id.menuFragment
                     3    -> R.id.noticeFragment
-                    4    -> R.id.menuFragment
+                    4    -> R.id.moreFragment
                     else -> throw IllegalStateException("BottomNav with position: $position")
                 }
 
