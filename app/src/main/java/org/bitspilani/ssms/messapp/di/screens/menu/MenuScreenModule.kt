@@ -11,7 +11,7 @@ import org.bitspilani.ssms.messapp.screens.shared.data.room.setup.AppDatabase
 class MenuScreenModule {
 
     @Provides
-    fun providesMenuRepository(): MenuRepository = MenuRepositoryImpl()
+    fun providesMenuRepository(menuItemsDao: MenuItemsDao): MenuRepository = MenuRepositoryImpl(menuItemsDao)
 
     @Provides
     fun providesMenuItemsDao(appDatabase: AppDatabase): MenuItemsDao = appDatabase.menuItemsDao()
