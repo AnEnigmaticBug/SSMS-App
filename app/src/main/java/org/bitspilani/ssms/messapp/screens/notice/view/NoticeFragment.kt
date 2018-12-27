@@ -15,8 +15,9 @@ import org.bitspilani.ssms.messapp.screens.notice.view.dialogs.HelpDialog
 import org.bitspilani.ssms.messapp.screens.notice.view.dialogs.NoticeDetailsDialog
 import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.view.adapters.NoticesAdapter
+import org.bitspilani.ssms.messapp.screens.notice.view.dialogs.DeleteConfirmationDialog
 
-class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDialog.ClickListener {
+class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDialog.ClickListener, DeleteConfirmationDialog.DeleteAllNoticesListener {
 
     private lateinit var viewModel: NoticeViewModel
 
@@ -32,7 +33,7 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
         }
 
         rootPOV.deleteAllBTN.setOnClickListener {
-            viewModel.onDeleteAllNoticesAction()
+            DeleteConfirmationDialog().show(childFragmentManager, "Delete-All Notices Confirmation Dialog")
         }
 
         viewModel.notices.observe(this, Observer {
@@ -40,6 +41,10 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
         })
 
         return rootPOV
+    }
+
+    override fun onAllNoticesDeleted() {
+        viewModel.onDeleteAllNoticesAction()
     }
 
     override fun onNoticeClicked(id: Id) {
