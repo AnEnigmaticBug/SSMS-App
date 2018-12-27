@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.data.room.model.DataLayerNotice
 
 @Dao
@@ -18,4 +19,7 @@ interface NoticesDao {
 
     @Query("DELETE FROM Notices")
     fun deleteAllNotices()
+
+    @Query("DELETE FROM Notices WHERE id = :id")
+    fun deleteNoticeById(id: Id)
 }
