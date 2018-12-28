@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,6 +17,8 @@ import org.bitspilani.ssms.messapp.screens.notice.view.dialogs.NoticeDetailsDial
 import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.view.adapters.NoticesAdapter
 import org.bitspilani.ssms.messapp.screens.notice.view.dialogs.DeleteConfirmationDialog
+import org.bitspilani.ssms.messapp.screens.notice.view.model.UiOrder
+import org.bitspilani.ssms.messapp.screens.notice.view.model.ViewLayerNotice
 
 class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDialog.ClickListener, DeleteConfirmationDialog.DeleteAllNoticesListener {
 
@@ -36,8 +39,19 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
             DeleteConfirmationDialog().show(childFragmentManager, "Delete-All Notices Confirmation Dialog")
         }
 
-        viewModel.notices.observe(this, Observer {
-            (rootPOV.noticesRCY.adapter as NoticesAdapter).notices = it
+        viewModel.order.observe(this, Observer {
+            when(it) {
+                is UiOrder.ShowLoading -> showLoadingState()
+                is UiOrder.ShowWorking -> showWorkingState(it.notices)
+                is UiOrder.ShowFailure -> showFailureState(it.error)
+                is UiOrder.MoveToLogin -> TODO("Follow the move to login order in notice screen")
+            }
+        })
+
+        viewModel.toast.observe(this, Observer {
+            if(it != null) {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
         })
 
         return rootPOV
@@ -51,8 +65,8 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
         NoticeDetailsDialog().also {
             val bundle = Bundle().apply {
                 putLong("ID", id)
-                putString("HEADING", viewModel.notices.value?.find { it.id == id }?.heading)
-                putString("CONTENT", viewModel.notices.value?.find { it.id == id }?.content)
+                putString("HEADING", (viewModel.order.value as UiOrder.ShowWorking).notices.find { it.id == id }?.heading)
+                putString("CONTENT", (viewModel.order.value as UiOrder.ShowWorking).notices.find { it.id == id }?.content)
             }
             it.arguments = bundle
         }
@@ -61,5 +75,17 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
 
     override fun onDeleteBTNPressed(id: Id) {
         viewModel.onDeleteNoticeByIdAction(id)
+    }
+
+    private fun showLoadingState() {
+        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showWorkingState(notices: List<ViewLayerNotice>) {
+        (view!!.noticesRCY.adapter as NoticesAdapter).notices = notices
+    }
+
+    private fun showFailureState(error: String) {
+        TODO("Implement failure state in notice screen")
     }
 }

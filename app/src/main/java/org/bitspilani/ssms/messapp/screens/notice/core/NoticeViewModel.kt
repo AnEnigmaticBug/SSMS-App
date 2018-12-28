@@ -6,24 +6,31 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.data.repo.NoticeRepository
+import org.bitspilani.ssms.messapp.screens.notice.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.notice.view.model.ViewLayerNotice
+import org.bitspilani.ssms.messapp.util.NoDataSourceException
+import org.bitspilani.ssms.messapp.util.NoLoggedUserException
 import org.bitspilani.ssms.messapp.util.set
 import org.bitspilani.ssms.messapp.util.toMut
 import org.threeten.bp.LocalDateTime
 
 class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
 
-    val notices: LiveData<List<ViewLayerNotice>> = MutableLiveData()
+    val order: LiveData<UiOrder> = MutableLiveData()
+    val toast: LiveData<String?> = MutableLiveData()
 
 
     private val d1 = CompositeDisposable()
+    private val d2 = CompositeDisposable()
 
 
     init {
+        order.toMut().value = UiOrder.ShowLoading
+        toast.toMut().value = null
         d1.set(nRepo.getAllNotices()
             .subscribe(
                 { _notices ->
-                    notices.toMut().postValue(_notices.sortedByDescending { it.datetime }.map {
+                    order.toMut().postValue(UiOrder.ShowWorking(_notices.sortedByDescending { it.datetime }.map {
                         ViewLayerNotice(
                             it.id,
                             it.heading,
@@ -32,21 +39,41 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
                             it.datetime.prettyDate(),
                             it.datetime.prettyTime()
                         )
-                    })
+                    }))
                 },
                 {
-
+                    order.toMut().postValue(when(it) {
+                        is NoDataSourceException -> UiOrder.ShowFailure("Couldn't connect to server")
+                        is NoLoggedUserException -> UiOrder.MoveToLogin
+                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
+                    })
                 }
             ))
     }
 
 
     fun onDeleteNoticeByIdAction(id: Id) {
-        nRepo.deleteNoticeById(id).subscribe()
+        d2.set(nRepo.deleteNoticeById(id)
+            .subscribe(
+                {
+
+                },
+                {
+                    toast.toMut().postValue("An error occurred")
+                }
+            ))
     }
 
     fun onDeleteAllNoticesAction() {
-        nRepo.deleteAllNotices().subscribe()
+        d2.set(nRepo.deleteAllNotices()
+            .subscribe(
+                {
+
+                },
+                {
+                    toast.toMut().postValue("An error occurred")
+                }
+            ))
     }
 
 
