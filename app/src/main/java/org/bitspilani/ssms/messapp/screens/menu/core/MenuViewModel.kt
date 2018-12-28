@@ -1,6 +1,5 @@
 package org.bitspilani.ssms.messapp.screens.menu.core
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,98 +9,106 @@ import org.bitspilani.ssms.messapp.screens.menu.core.model.Meal
 import org.bitspilani.ssms.messapp.screens.menu.core.model.MenuItem
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Rating
 import org.bitspilani.ssms.messapp.screens.menu.data.repo.MenuRepository
-import org.bitspilani.ssms.messapp.screens.menu.view.model.UIState
+import org.bitspilani.ssms.messapp.screens.menu.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerDate
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMeal
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMenuItem
+import org.bitspilani.ssms.messapp.util.NoDataSourceException
+import org.bitspilani.ssms.messapp.util.NoLoggedUserException
 import org.bitspilani.ssms.messapp.util.set
 import org.bitspilani.ssms.messapp.util.toMut
 import org.threeten.bp.LocalDate
 
 class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
 
-
-    val state: LiveData<UIState> = MutableLiveData()
-    val meals: LiveData<List<ViewLayerMeal>> = MutableLiveData()
-    val dates: LiveData<List<ViewLayerDate>> = MutableLiveData()
-    val toast: LiveData<String> = MutableLiveData()
+    val order: LiveData<UiOrder> = MutableLiveData()
+    val toast: LiveData<String?> = MutableLiveData()
 
 
     private val d1 = CompositeDisposable()
+    private val d2 = CompositeDisposable()
 
 
     init {
-        state.toMut().value = UIState.Initializing
+        order.toMut().value = UiOrder.ShowLoading
         d1.set(mRepo.getAllMenuItems()
             .subscribe(
-                { _menuItems ->
-                    dates.toMut().postValue(_menuItems.extractWithPickedDate(LocalDate.now()))
-                    meals.toMut().postValue(_menuItems.filter { it.date == LocalDate.now() }.toViewLayer())
-                    state.toMut().postValue(UIState.Working)
+                { _items ->
+                    val dates = _items.toViewLayerDates(pickedDate = LocalDate.now())
+                    val meals = _items.toViewLayerMeals(pickedDate = LocalDate.now())
+                    order.toMut().postValue(UiOrder.ShowWorking(dates, meals))
                 },
                 {
-                    state.toMut().postValue(UIState.Failure)
+                    order.toMut().postValue(when(it) {
+                        is NoDataSourceException -> UiOrder.ShowFailure("Couldn't connect to server")
+                        is NoLoggedUserException -> UiOrder.MoveToLogin
+                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
+                    })
+
                 }
             ))
     }
 
 
     fun onPickDateAction(id: Long) {
-        check(dates.value != null) { "Date(${LocalDate.ofEpochDay(id)}) picked before initialization" }
+        check(order.value is UiOrder.ShowWorking) { "Date picked without WorkingState" }
 
-        dates.toMut().value = dates.value!!.map { it.copy(isSelected = it.id == id) }
-        updateItemsAndSetWorkingState(LocalDate.ofEpochDay(id))
+        val date = LocalDate.ofEpochDay(id)
+
+        d1.set(mRepo.getAllMenuItems()
+            .subscribe(
+                { _items ->
+                    val dates = _items.toViewLayerDates(pickedDate = date)
+                    val meals = _items.toViewLayerMeals(pickedDate = date)
+                    order.toMut().postValue(UiOrder.ShowWorking(dates, meals))
+                },
+                {
+                    order.toMut().postValue(when(it) {
+                        is NoLoggedUserException -> UiOrder.MoveToLogin
+                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
+                    })
+                }
+            ))
     }
 
-    @SuppressLint("CheckResult")
     fun onRateItemAction(id: Id, rating: Rating) {
-        check(dates.value != null) { "Dates not initialized" }
-        check(meals.value != null) { "Meals not initialized" }
+        check(order.value is UiOrder.ShowWorking) { "Item rated without WorkingState" }
 
         if(getPickedDate() != LocalDate.now()) {
-            toast.toMut().value = "You can only rate today's items"
+            toast.toMut().postValue("You can only rate today's items")
             return
         }
 
-        mRepo.rateMenuItemWithId(id, rating).subscribe()
-    }
-
-
-    private fun getPickedDate(): LocalDate {
-        check(dates.value != null) { "Dates not initialized" }
-
-        return LocalDate.ofEpochDay(dates.value!!.find { it.isSelected }!!.id)
-    }
-
-
-    private fun updateItemsAndSetWorkingState(date: LocalDate) {
-        d1.set(mRepo.getAllMenuItems()
+        d2.set(mRepo.rateMenuItemWithId(id, rating)
             .subscribe(
-                { _menuItems ->
-                    meals.toMut().postValue(_menuItems.filter { it.date == date }.toViewLayer())
-                    state.toMut().postValue(UIState.Working)
+                {
 
                 },
                 {
-                    state.toMut().postValue(UIState.Failure)
+                    toast.toMut().postValue("An error occurred")
                 }
             ))
     }
 
 
-    private fun List<MenuItem>.extractWithPickedDate(date: LocalDate): List<ViewLayerDate> {
+    private fun getPickedDate(): LocalDate {
+        return LocalDate.ofEpochDay((order.value as UiOrder.ShowWorking).dates.find { it.isSelected }!!.id)
+    }
+
+
+    private fun List<MenuItem>.toViewLayerDates(pickedDate: LocalDate): List<ViewLayerDate> {
 
         fun LocalDate.toViewLayer(isSelected: Boolean): ViewLayerDate {
             return ViewLayerDate(toEpochDay(), dayOfMonth.toString(), month.toString(), isSelected)
         }
 
         return this.distinctBy { it.date }.map {
-            it.date.toViewLayer(it.date == date)
+            it.date.toViewLayer(it.date == pickedDate)
         }
     }
 
-    private fun List<MenuItem>.toViewLayer(): List<ViewLayerMeal> {
-        return this.groupBy { it.meal }.map {
+    private fun List<MenuItem>.toViewLayerMeals(pickedDate: LocalDate): List<ViewLayerMeal> {
+        return this.filter { it.date == pickedDate }.groupBy { it.meal }.map {
             val name = when(it.key) {
                 Meal.BreakFast -> "Breakfast"
                 Meal.Lunch     -> "Lunch"
@@ -116,5 +123,6 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         d1.clear()
+        d2.clear()
     }
 }
