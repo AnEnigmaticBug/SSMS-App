@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     .setPopUpTo(R.id.menuFragment, false).build()
 
                 val destination = when(position) {
-                    0    -> R.id.menuFragment
+                    0    -> R.id.profileFragment
                     1    -> R.id.menuFragment
                     2    -> R.id.menuFragment
                     3    -> R.id.noticeFragment

@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_menuFragment_to_moreFragment"
             app:destination="@id/moreFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/noticeFragment"
@@ -25,5 +28,10 @@
         android:id="@+id/moreFragment"
         android:name="org.bitspilani.ssms.messapp.screens.more.view.MoreFragment"
         android:label="MoreFragment"
-        tools:layout="@layout/fra_more"/>
+        tools:layout="@layout/fra_more" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.profile.view.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fra_profile" />
 </navigation>
