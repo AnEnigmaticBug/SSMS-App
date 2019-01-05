@@ -25,35 +25,28 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     val toast: LiveData<String?> = MutableLiveData()
 
 
+    // Holds the last date the user picked. Useful when retrying after an error.
+    private lateinit var pickedDate: LocalDate
+
+
     private val d1 = CompositeDisposable()
     private val d2 = CompositeDisposable()
 
 
     init {
-        order.toMut().value = UiOrder.ShowLoading
-        d1.set(mRepo.getAllMenuItems()
-            .subscribe(
-                { _items ->
-                    val dates = _items.toViewLayerDates(pickedDate = LocalDate.now())
-                    val meals = _items.toViewLayerMeals(pickedDate = LocalDate.now())
-                    order.toMut().postValue(UiOrder.ShowWorking(dates, meals))
-                },
-                {
-                    order.toMut().postValue(when(it) {
-                        is NoDataSourceException -> UiOrder.ShowFailure("Couldn't connect to server")
-                        is NoLoggedUserException -> UiOrder.MoveToLogin
-                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
-                    })
-
-                }
-            ))
+        initializeWithDate(LocalDate.now())
     }
 
+
+    fun onRetryAction() {
+        initializeWithDate(pickedDate)
+    }
 
     fun onPickDateAction(id: Long) {
         check(order.value is UiOrder.ShowWorking) { "Date picked without WorkingState" }
 
         val date = LocalDate.ofEpochDay(id)
+        pickedDate = date
 
         d1.set(mRepo.getAllMenuItems()
             .subscribe(
@@ -74,7 +67,7 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     fun onRateItemAction(id: Id, rating: Rating) {
         check(order.value is UiOrder.ShowWorking) { "Item rated without WorkingState" }
 
-        if(getPickedDate() != LocalDate.now()) {
+        if(pickedDate != LocalDate.now()) {
             toast.toMut().postValue("You can only rate today's items")
             return
         }
@@ -91,8 +84,27 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     }
 
 
-    private fun getPickedDate(): LocalDate {
-        return LocalDate.ofEpochDay((order.value as UiOrder.ShowWorking).dates.find { it.isSelected }!!.id)
+    private fun initializeWithDate(date: LocalDate) {
+        pickedDate = date
+
+        order.toMut().value = UiOrder.ShowLoading
+
+        d1.set(mRepo.getAllMenuItems()
+            .subscribe(
+                { _items ->
+                    val dates = _items.toViewLayerDates(pickedDate = date)
+                    val meals = _items.toViewLayerMeals(pickedDate = date)
+                    order.toMut().postValue(UiOrder.ShowWorking(dates, meals))
+                },
+                {
+                    order.toMut().postValue(when(it) {
+                        is NoDataSourceException -> UiOrder.ShowFailure("Couldn't connect to server")
+                        is NoLoggedUserException -> UiOrder.MoveToLogin
+                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
+                    })
+
+                }
+            ))
     }
 
 
