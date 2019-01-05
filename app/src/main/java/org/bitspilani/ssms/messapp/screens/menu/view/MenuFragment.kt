@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.fra_menu.view.*
+import kotlinx.android.synthetic.main.fra_menu_working_state.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.menu.core.MenuViewModel
 import org.bitspilani.ssms.messapp.screens.menu.view.model.UiOrder
@@ -27,10 +28,16 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProviders.of(this, MenuViewModelFactory())[MenuViewModel::class.java]
 
-        val rootPOV = inflater.inflate(R.layout.fra_menu, container, false)
+        val rootPOV = inflater.inflate(R.layout.fra_menu_working_state, container, false)
+
+        (rootPOV as ConstraintLayout).loadLayoutDescription(R.xml.ctl_states_fra_menu)
 
         rootPOV.mealsRCY.adapter = MealsAdapter(this)
         rootPOV.datesRCY.adapter = DatesAdapter(this)
+
+        rootPOV.retryBTN.setOnClickListener {
+            viewModel.onRetryAction()
+        }
 
         viewModel.order.observe(this, Observer {
             when(it) {
@@ -59,15 +66,17 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
     }
 
     private fun showLoadingState() {
-        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+        (view as ConstraintLayout).setState(R.id.loading, 0, 0)
     }
 
     private fun showWorkingState(dates: List<ViewLayerDate>, meals: List<ViewLayerMeal>) {
+        (view as ConstraintLayout).setState(R.id.working, 0, 0)
         (view!!.datesRCY.adapter as DatesAdapter).dates = dates
         (view!!.mealsRCY.adapter as MealsAdapter).meals = meals
     }
 
     private fun showFailureState(error: String) {
-        TODO("Implement failure state in menu screen")
+        (view as ConstraintLayout).setState(R.id.failure, 0, 0)
+        view!!.errorLBL.text = error
     }
 }
