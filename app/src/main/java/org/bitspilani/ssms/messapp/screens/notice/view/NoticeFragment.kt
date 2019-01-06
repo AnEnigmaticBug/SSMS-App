@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.fra_notice.view.*
+import kotlinx.android.synthetic.main.fra_notice_working_state.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.notice.core.NoticeViewModel
 import org.bitspilani.ssms.messapp.screens.notice.core.NoticeViewModelFactory
@@ -27,9 +28,15 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProviders.of(this, NoticeViewModelFactory())[NoticeViewModel::class.java]
 
-        val rootPOV = inflater.inflate(R.layout.fra_notice, container, false)
+        val rootPOV = inflater.inflate(R.layout.fra_notice_working_state, container, false)
+
+        (rootPOV as ConstraintLayout).loadLayoutDescription(R.xml.ctl_states_fra_notice)
 
         rootPOV.noticesRCY.adapter = NoticesAdapter(this)
+
+        rootPOV.retryBTN.setOnClickListener {
+            viewModel.onRetryAction()
+        }
 
         rootPOV.infoBTN.setOnClickListener {
             HelpDialog().show(childFragmentManager, "Help Dialog")
@@ -78,14 +85,16 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
     }
 
     private fun showLoadingState() {
-        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+        (view as ConstraintLayout).setState(R.id.loading, 0, 0)
     }
 
     private fun showWorkingState(notices: List<ViewLayerNotice>) {
+        (view as ConstraintLayout).setState(R.id.working, 0, 0)
         (view!!.noticesRCY.adapter as NoticesAdapter).notices = notices
     }
 
     private fun showFailureState(error: String) {
-        TODO("Implement failure state in notice screen")
+        (view as ConstraintLayout).setState(R.id.failure, 0, 0)
+        view!!.errorLBL.text = error
     }
 }

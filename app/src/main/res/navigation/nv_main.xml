@@ -23,7 +23,7 @@
         android:id="@+id/noticeFragment"
         android:name="org.bitspilani.ssms.messapp.screens.notice.view.NoticeFragment"
         android:label="NoticeFragment"
-        tools:layout="@layout/fra_notice" />
+        tools:layout="@layout/fra_notice_working_state" />
     <fragment
         android:id="@+id/moreFragment"
         android:name="org.bitspilani.ssms.messapp.screens.more.view.MoreFragment"
