@@ -33,5 +33,5 @@
         android:id="@+id/profileFragment"
         android:name="org.bitspilani.ssms.messapp.screens.profile.view.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fra_profile" />
+        tools:layout="@layout/fra_profile_working_state" />
 </navigation>

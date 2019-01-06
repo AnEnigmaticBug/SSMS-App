@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,8 +20,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fra_profile.*
-import kotlinx.android.synthetic.main.fra_profile.view.*
+import kotlinx.android.synthetic.main.fra_profile_working_state.*
+import kotlinx.android.synthetic.main.fra_profile_working_state.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.profile.core.ProfileViewModel
 import org.bitspilani.ssms.messapp.screens.profile.core.ProfileViewModelFactory
@@ -34,7 +35,13 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProviders.of(this, ProfileViewModelFactory())[ProfileViewModel::class.java]
 
-        val rootPOV = inflater.inflate(R.layout.fra_profile, container, false)
+        val rootPOV = inflater.inflate(R.layout.fra_profile_working_state, container, false)
+
+        (rootPOV as ConstraintLayout).loadLayoutDescription(R.xml.ctl_states_fra_profile)
+
+        rootPOV.retryBTN.setOnClickListener {
+            viewModel.onRetryAction()
+        }
 
         rootPOV.logoutBTN.setOnClickListener {
             viewModel.onLogoutAction()
@@ -63,11 +70,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showLoadingState() {
-        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+        (view as ConstraintLayout).setState(R.id.loading, 0, 0)
     }
 
     @SuppressLint("CheckResult")
     private fun showWorkingState(user: ViewLayerUser) {
+        (view as ConstraintLayout).setState(R.id.working, 0, 0)
+
         view!!.nameLBL.text = user.name
         view!!.bitsIdLBL.text = user.id
         view!!.roomLBL.text = user.room
@@ -96,7 +105,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showFailureState(error: String) {
-        TODO("Implement failure state in notice screen")
+        (view as ConstraintLayout).setState(R.id.failure, 0, 0)
+        view!!.errorLBL.text = error
     }
 
     private fun String.toQrCode(): Bitmap {
