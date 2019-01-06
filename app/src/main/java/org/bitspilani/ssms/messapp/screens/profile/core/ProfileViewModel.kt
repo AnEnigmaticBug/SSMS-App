@@ -25,6 +25,10 @@ class ProfileViewModel(private val uRepo: UserRepository) : ViewModel() {
     }
 
 
+    fun onRetryAction() {
+        updateUser()
+    }
+
     fun onLogoutAction() {
         order.toMut().postValue(UiOrder.ShowLoading)
         uRepo.setUser(null).subscribe()
