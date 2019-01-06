@@ -25,6 +25,40 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
 
 
     init {
+        initialize()
+    }
+
+
+    fun onRetryAction() {
+        initialize()
+    }
+
+    fun onDeleteNoticeByIdAction(id: Id) {
+        d2.set(nRepo.deleteNoticeById(id)
+            .subscribe(
+                {
+
+                },
+                {
+                    toast.toMut().postValue("An error occurred")
+                }
+            ))
+    }
+
+    fun onDeleteAllNoticesAction() {
+        d2.set(nRepo.deleteAllNotices()
+            .subscribe(
+                {
+
+                },
+                {
+                    toast.toMut().postValue("An error occurred")
+                }
+            ))
+    }
+
+
+    private fun initialize() {
         order.toMut().value = UiOrder.ShowLoading
         toast.toMut().value = null
         d1.set(nRepo.getAllNotices()
@@ -47,31 +81,6 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
                         is NoLoggedUserException -> UiOrder.MoveToLogin
                         else                     -> UiOrder.ShowFailure("Something went wrong :(")
                     })
-                }
-            ))
-    }
-
-
-    fun onDeleteNoticeByIdAction(id: Id) {
-        d2.set(nRepo.deleteNoticeById(id)
-            .subscribe(
-                {
-
-                },
-                {
-                    toast.toMut().postValue("An error occurred")
-                }
-            ))
-    }
-
-    fun onDeleteAllNoticesAction() {
-        d2.set(nRepo.deleteAllNotices()
-            .subscribe(
-                {
-
-                },
-                {
-                    toast.toMut().postValue("An error occurred")
                 }
             ))
     }
