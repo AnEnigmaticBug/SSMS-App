@@ -7,6 +7,7 @@ import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 import org.bitspilani.ssms.messapp.screens.shared.core.model.User
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class UserRepositoryImpl(private val prefs: SharedPreferences) : UserRepository {
 
@@ -18,6 +19,13 @@ class UserRepositoryImpl(private val prefs: SharedPreferences) : UserRepository 
         const val profilePicUrl = "PROFILE_PIC_URL"
         const val qrCode = "QR"
         const val jwt = "JWT"
+    }
+
+    override fun login(idToken: String, profilePicUrl: String): Completable {
+        return Completable.fromAction {
+            setUser(User("2017A6PS0666P", "Creeping Monster", "MR 2108", profilePicUrl, "lkjgs;lkjg;qkj;lkjl;3lk4ljdkljalkdgj;ldkjg;ldjkg;aldjsgalkdsjgal;kjg;k", "JWT lol"))
+                .subscribe()
+        }.delay(3, TimeUnit.SECONDS)
     }
 
     override fun getUser(): Maybe<User> {

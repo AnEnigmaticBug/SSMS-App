@@ -9,6 +9,8 @@ import org.bitspilani.ssms.messapp.screens.shared.core.model.User
  * */
 interface UserRepository {
 
+    fun login(idToken: String, profilePicUrl: String): Completable
+
     fun getUser(): Maybe<User>
 
     fun setUser(user: User?): Completable
