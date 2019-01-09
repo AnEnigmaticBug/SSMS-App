@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstraintLayoutStates xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <State
+        android:id="@+id/loading"
+        app:constraints="@layout/act_login_loading_state"/>
+    <State
+        android:id="@+id/working"
+        app:constraints="@layout/act_login_working_state"/>
+</ConstraintLayoutStates>
