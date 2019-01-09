@@ -1,6 +1,7 @@
 package org.bitspilani.ssms.messapp.screens.profile.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fra_profile_working_state.*
 import kotlinx.android.synthetic.main.fra_profile_working_state.view.*
 import org.bitspilani.ssms.messapp.R
+import org.bitspilani.ssms.messapp.screens.login.view.LoginActivity
 import org.bitspilani.ssms.messapp.screens.profile.core.ProfileViewModel
 import org.bitspilani.ssms.messapp.screens.profile.core.ProfileViewModelFactory
 import org.bitspilani.ssms.messapp.screens.profile.view.model.UiOrder
@@ -56,7 +58,10 @@ class ProfileFragment : Fragment() {
                 is UiOrder.ShowLoading -> showLoadingState()
                 is UiOrder.ShowWorking -> showWorkingState(it.user)
                 is UiOrder.ShowFailure -> showFailureState(it.error)
-                is UiOrder.MoveToLogin -> TODO("Follow the move to login order in profile screen")
+                is UiOrder.MoveToLogin -> {
+                    startActivity(Intent(activity, LoginActivity::class.java))
+                    activity?.finish()
+                }
             }
         })
 

@@ -1,5 +1,6 @@
 package org.bitspilani.ssms.messapp.screens.notice.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fra_notice_working_state.view.*
 import org.bitspilani.ssms.messapp.R
+import org.bitspilani.ssms.messapp.screens.login.view.LoginActivity
 import org.bitspilani.ssms.messapp.screens.notice.core.NoticeViewModel
 import org.bitspilani.ssms.messapp.screens.notice.core.NoticeViewModelFactory
 import org.bitspilani.ssms.messapp.screens.notice.view.dialogs.HelpDialog
@@ -51,7 +53,10 @@ class NoticeFragment : Fragment(), NoticesAdapter.ClickListener, NoticeDetailsDi
                 is UiOrder.ShowLoading -> showLoadingState()
                 is UiOrder.ShowWorking -> showWorkingState(it.notices)
                 is UiOrder.ShowFailure -> showFailureState(it.error)
-                is UiOrder.MoveToLogin -> TODO("Follow the move to login order in notice screen")
+                is UiOrder.MoveToLogin -> {
+                    startActivity(Intent(activity, LoginActivity::class.java))
+                    activity?.finish()
+                }
             }
         })
 

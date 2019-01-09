@@ -1,5 +1,6 @@
 package org.bitspilani.ssms.messapp.screens.menu.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fra_menu_working_state.view.*
 import org.bitspilani.ssms.messapp.R
+import org.bitspilani.ssms.messapp.screens.login.view.LoginActivity
 import org.bitspilani.ssms.messapp.screens.menu.core.MenuViewModel
 import org.bitspilani.ssms.messapp.screens.menu.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.menu.core.MenuViewModelFactory
@@ -44,7 +46,10 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
                 is UiOrder.ShowWorking -> showWorkingState(it.dates, it.meals)
                 is UiOrder.ShowFailure -> showFailureState(it.error)
                 is UiOrder.ShowLoading -> showLoadingState()
-                is UiOrder.MoveToLogin -> TODO("Follow the move to login order in menu screen")
+                is UiOrder.MoveToLogin -> {
+                    startActivity(Intent(activity, LoginActivity::class.java))
+                    activity?.finish()
+                }
             }
         })
 
