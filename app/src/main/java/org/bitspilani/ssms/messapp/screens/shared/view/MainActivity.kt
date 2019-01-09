@@ -1,4 +1,4 @@
-package org.bitspilani.ssms.messapp
+package org.bitspilani.ssms.messapp.screens.shared.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import kotlinx.android.synthetic.main.act_main.*
+import org.bitspilani.ssms.messapp.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,9 +22,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         navHostFRA.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             val currentItem = when(destination.id) {
-                R.id.menuFragment   -> 2
+                R.id.menuFragment -> 2
                 R.id.noticeFragment -> 3
-                R.id.moreFragment   -> 4
+                R.id.moreFragment -> 4
                 else                -> 2
             }
             if(bottomNavAHB.currentItem != currentItem) {
