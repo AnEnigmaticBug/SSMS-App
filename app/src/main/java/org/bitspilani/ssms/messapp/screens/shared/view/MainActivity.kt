@@ -62,7 +62,12 @@ class MainActivity : AppCompatActivity() {
 
                 val options = NavOptions.Builder()
                     .setLaunchSingleTop(true)
-                    .setPopUpTo(R.id.menuFragment, false).build()
+                    .setPopUpTo(R.id.menuFragment, false)
+                    .setEnterAnim(R.anim.an_fade_in)
+                    .setExitAnim(R.anim.an_fade_out)
+                    .setPopEnterAnim(R.anim.an_fade_in)
+                    .setPopExitAnim(R.anim.an_fade_out)
+                    .build()
 
                 val destination = when(position) {
                     0    -> R.id.profileFragment
