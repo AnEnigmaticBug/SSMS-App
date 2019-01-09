@@ -1,6 +1,8 @@
 package org.bitspilani.ssms.messapp.di.app
 
 import dagger.Component
+import org.bitspilani.ssms.messapp.di.screens.login.LoginScreenComponent
+import org.bitspilani.ssms.messapp.di.screens.login.LoginScreenModule
 import javax.inject.Singleton
 import org.bitspilani.ssms.messapp.di.screens.menu.MenuScreenComponent
 import org.bitspilani.ssms.messapp.di.screens.menu.MenuScreenModule
@@ -17,4 +19,6 @@ interface AppComponent {
     fun newNoticeScreenComponent(m1: NoticeScreenModule): NoticeScreenComponent
 
     fun newProfileScreenComponent(m1: ProfileScreenModule): ProfileScreenComponent
+
+    fun newLoginScreenComponent(m1: LoginScreenModule): LoginScreenComponent
 }
