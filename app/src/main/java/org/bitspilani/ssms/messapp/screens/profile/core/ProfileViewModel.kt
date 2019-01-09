@@ -1,5 +1,6 @@
 package org.bitspilani.ssms.messapp.screens.profile.core
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,9 +30,18 @@ class ProfileViewModel(private val uRepo: UserRepository) : ViewModel() {
         updateUser()
     }
 
+    @SuppressLint("CheckResult")
     fun onLogoutAction() {
         order.toMut().postValue(UiOrder.ShowLoading)
-        uRepo.setUser(null).subscribe()
+        uRepo.setUser(null)
+            .subscribe(
+                {
+                    order.toMut().postValue(UiOrder.MoveToLogin)
+                },
+                {
+                    throw IllegalStateException("Couldn't set user to null")
+                }
+            )
     }
 
 
