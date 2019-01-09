@@ -41,6 +41,14 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
             viewModel.onRetryAction()
         }
 
+        rootPOV.leftBTN.setOnClickListener {
+            rootPOV.datesRCY.smoothScrollBy(-500, 0)
+        }
+
+        rootPOV.rightBTN.setOnClickListener {
+            rootPOV.datesRCY.smoothScrollBy(+500, 0)
+        }
+
         viewModel.order.observe(this, Observer {
             when(it) {
                 is UiOrder.ShowWorking -> showWorkingState(it.dates, it.meals)

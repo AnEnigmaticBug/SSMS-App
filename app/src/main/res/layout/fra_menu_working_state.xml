@@ -40,7 +40,7 @@
         <ImageView
             android:id="@+id/leftBTN"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             app:srcCompat="@drawable/ic_arrow_left_24dp_24dp" />
 
@@ -58,7 +58,7 @@
         <ImageView
             android:id="@+id/rightBTN"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             app:srcCompat="@drawable/ic_arrow_right_24dp_24dp" />
 
