@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@drawable/gd_pnk01_vio01</item>
         <item name="android:statusBarColor">@color/vio02</item>
+        <item name="android:colorEdgeEffect">@color/vio01</item>
     </style>
 
 </resources>

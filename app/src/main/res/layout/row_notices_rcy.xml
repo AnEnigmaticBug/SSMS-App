@@ -30,6 +30,7 @@
         android:fontFamily="@font/cabin"
         android:includeFontPadding="false"
         android:lines="1"
+        android:textColor="@color/blk01"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/priorityIndicatorPOV"

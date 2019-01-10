@@ -11,7 +11,7 @@ import org.bitspilani.ssms.messapp.R
 class MoreOptionsAdapter : RecyclerView.Adapter<MoreOptionsAdapter.MoreOptionVHolder>() {
 
     private val options = listOf(
-        "Sick Food", "Feedback", "Help", "Contact Us", "About", "SSMS Tech Team"
+        "SSMS Tech Team", "Feedback", "Help", "Contact Us", "About", "Sick Food"
     )
 
     override fun getItemCount() = options.size

@@ -30,7 +30,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_email_130dp_130dp" />
+        app:srcCompat="@drawable/ic_email_100dp_100dp" />
 
     <TextView
         android:id="@+id/textView4"
