@@ -42,4 +42,10 @@
         <item name="android:indeterminate">true</item>
     </style>
 
+    <style name="CheckBox">
+        <item name="android:textColor">@color/wht01</item>
+        <item name="android:buttonTint">@color/wht01</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>
