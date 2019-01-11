@@ -18,6 +18,7 @@
         android:layout_marginBottom="4dp"
         android:ellipsize="end"
         android:lines="1"
+        android:textColor="@color/gry02"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ratePositivelyBTN"

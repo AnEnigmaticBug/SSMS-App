@@ -18,6 +18,7 @@
         android:layout_marginEnd="24dp"
         android:text="Do you wish to delete all the notices?"
         android:textAlignment="center"
+        android:textColor="@color/gry02"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
