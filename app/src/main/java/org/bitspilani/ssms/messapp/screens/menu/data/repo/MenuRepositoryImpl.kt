@@ -1,17 +1,24 @@
 package org.bitspilani.ssms.messapp.screens.menu.data.repo
 
+import android.util.Log
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Id
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Meal
 import org.bitspilani.ssms.messapp.screens.menu.core.model.MenuItem
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Rating
 import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsDao
 import org.bitspilani.ssms.messapp.screens.menu.data.room.model.DataLayerMenuItem
+import org.bitspilani.ssms.messapp.util.modifyElement
 import org.threeten.bp.LocalDate
 
 class MenuRepositoryImpl(private val menuItemsDao: MenuItemsDao) : MenuRepository {
+
+    private val menuItemsSubject = BehaviorSubject.create<List<MenuItem>>()
+
 
     init {
         val baseDate = LocalDate.now()
@@ -45,18 +52,29 @@ class MenuRepositoryImpl(private val menuItemsDao: MenuItemsDao) : MenuRepositor
                 DataLayerMenuItem(25, "Item18", baseDate.plusDays(8), Meal.Dinner, Rating.NotRated)
             ))
         }.subscribeOn(Schedulers.io()).subscribe()
+        menuItemsDao.getAllMenuItems()
+            .subscribeOn(Schedulers.io())
+            .filter { it.isNotEmpty() }
+            .map { _items -> _items.map { MenuItem(it.id, it.name, it.date, it.meal, it.rating) } }
+            .subscribe(
+                { _menuItems ->
+                    menuItemsSubject.onNext(_menuItems)
+                },
+                {
+                    throw it
+                }
+            )
     }
 
     override fun getAllMenuItems(): Observable<List<MenuItem>> {
-        return menuItemsDao.getAllMenuItems()
-            .subscribeOn(Schedulers.io())
-            .filter { it.isNotEmpty() }
-            .map { it.map { MenuItem(it.id, it.name, it.date, it.meal, it.rating) } }
+        return menuItemsSubject.toFlowable(BackpressureStrategy.LATEST)
+            .distinctUntilChanged()
             .toObservable()
     }
 
     override fun rateMenuItemWithId(id: Id, rating: Rating): Completable {
         return Completable.fromAction {
+            menuItemsSubject.value?.modifyElement({ it.id == id }, { it.copy(rating = rating) })
             menuItemsDao.getMenuItemById(id)
                 .take(1)
                 .subscribe {

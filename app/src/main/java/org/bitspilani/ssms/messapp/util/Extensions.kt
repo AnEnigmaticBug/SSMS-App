@@ -16,3 +16,10 @@ fun<T> LiveData<T>.toMut(): MutableLiveData<T> {
         else               -> throw IllegalArgumentException("Not a MutableLiveData")
     }
 }
+
+fun<T> List<T>.modifyElement(condition: (elem: T) -> Boolean, action: (elem: T) -> T): List<T> {
+    val i = this.indexOfFirst { condition.invoke(it) }
+    return this.toMutableList().also { _mutableList ->
+        _mutableList[i] = action.invoke(_mutableList[i])
+    }
+}
