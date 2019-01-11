@@ -22,10 +22,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         navHostFRA.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             val currentItem = when(destination.id) {
-                R.id.menuFragment -> 2
-                R.id.noticeFragment -> 3
-                R.id.moreFragment -> 4
-                else                -> 2
+                R.id.menuFragment     -> 2
+                R.id.noticeFragment   -> 3
+                R.id.moreFragment     -> 4
+                R.id.feedbackFragment -> 4
+                else                  -> 2
             }
             if(bottomNavAHB.currentItem != currentItem) {
                 bottomNavAHB.setCurrentItem(currentItem, false)
@@ -60,25 +61,28 @@ class MainActivity : AppCompatActivity() {
                     return@setOnTabSelectedListener false
                 }
 
-                val options = NavOptions.Builder()
-                    .setLaunchSingleTop(true)
-                    .setPopUpTo(R.id.menuFragment, false)
-                    .setEnterAnim(R.anim.an_fade_in)
-                    .setExitAnim(R.anim.an_fade_out)
-                    .setPopEnterAnim(R.anim.an_fade_in)
-                    .setPopExitAnim(R.anim.an_fade_out)
-                    .build()
+                if(position == 2) {
+                    navHostFRA.findNavController().popBackStack(R.id.menuFragment, false)
+                } else {
+                    val options = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .setPopUpTo(R.id.menuFragment, false)
+                        .setEnterAnim(R.anim.an_fade_in)
+                        .setExitAnim(R.anim.an_fade_out)
+                        .setPopEnterAnim(R.anim.an_fade_in)
+                        .setPopExitAnim(R.anim.an_fade_out)
+                        .build()
 
-                val destination = when(position) {
-                    0    -> R.id.profileFragment
-                    1    -> R.id.menuFragment
-                    2    -> R.id.menuFragment
-                    3    -> R.id.noticeFragment
-                    4    -> R.id.moreFragment
-                    else -> throw IllegalStateException("BottomNav with position: $position")
+                    val destination = when(position) {
+                        0    -> R.id.profileFragment
+                        1    -> R.id.menuFragment
+                        3    -> R.id.noticeFragment
+                        4    -> R.id.moreFragment
+                        else -> throw IllegalStateException("BottomNav with position: $position")
+                    }
+
+                    navHostFRA.findNavController().navigate(destination, null, options)
                 }
-
-                navHostFRA.findNavController().navigate(destination, null, options)
 
                 return@setOnTabSelectedListener true
             }

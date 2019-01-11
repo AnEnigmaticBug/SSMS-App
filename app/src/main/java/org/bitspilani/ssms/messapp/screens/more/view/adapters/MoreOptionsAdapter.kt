@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.row_more_options_rcy.view.*
 import org.bitspilani.ssms.messapp.R
@@ -26,7 +27,11 @@ class MoreOptionsAdapter : RecyclerView.Adapter<MoreOptionsAdapter.MoreOptionVHo
 
         holder.nameLBL.text = option
 
-        holder.rootPOV.setOnClickListener {  }
+        holder.rootPOV.setOnClickListener {
+            if(option == "Feedback") {
+                holder.rootPOV.findNavController().navigate(R.id.action_moreFragment_to_feedbackFragment)
+            }
+        }
     }
 
     class MoreOptionVHolder(val rootPOV: View) : RecyclerView.ViewHolder(rootPOV) {

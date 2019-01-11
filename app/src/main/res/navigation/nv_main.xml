@@ -28,10 +28,21 @@
         android:id="@+id/moreFragment"
         android:name="org.bitspilani.ssms.messapp.screens.more.view.MoreFragment"
         android:label="MoreFragment"
-        tools:layout="@layout/fra_more" />
+        tools:layout="@layout/fra_more">
+        <action
+            android:id="@+id/action_moreFragment_to_feedbackFragment"
+            app:destination="@id/feedbackFragment"
+            app:enterAnim="@anim/an_fade_in"
+            app:exitAnim="@anim/an_fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="org.bitspilani.ssms.messapp.screens.profile.view.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fra_profile_working_state" />
+    <fragment
+        android:id="@+id/feedbackFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.feedback.view.FeedbackFragment"
+        android:label="FeedbackFragment"
+        tools:layout="@layout/fra_feedback_working_state" />
 </navigation>
