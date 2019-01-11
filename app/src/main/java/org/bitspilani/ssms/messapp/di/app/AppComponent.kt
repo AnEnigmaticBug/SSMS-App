@@ -1,6 +1,8 @@
 package org.bitspilani.ssms.messapp.di.app
 
 import dagger.Component
+import org.bitspilani.ssms.messapp.di.screens.feedback.FeedbackScreenComponent
+import org.bitspilani.ssms.messapp.di.screens.feedback.FeedbackScreenModule
 import org.bitspilani.ssms.messapp.di.screens.login.LoginScreenComponent
 import org.bitspilani.ssms.messapp.di.screens.login.LoginScreenModule
 import javax.inject.Singleton
@@ -25,4 +27,6 @@ interface AppComponent {
     fun newLoginScreenComponent(m1: LoginScreenModule): LoginScreenComponent
 
     fun newSplashScreenComponent(m1: SplashScreenModule): SplashScreenComponent
+
+    fun newFeedbackScreenComponent(m1: FeedbackScreenModule): FeedbackScreenComponent
 }
