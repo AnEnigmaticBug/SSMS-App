@@ -17,7 +17,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/cabin"
         android:textAlignment="center"
         android:textColor="@color/blk01"
         android:textSize="24sp"
@@ -45,7 +44,6 @@
             android:id="@+id/contentLBL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/cabin"
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@+id/headingLBL"
@@ -58,21 +56,21 @@
 
     <ImageView
         android:id="@+id/closeBTN"
+        style="@style/DialogIconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
         android:layout_marginBottom="16dp"
-        android:tint="@color/pnk01"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_close_32dp_32dp" />
 
     <ImageView
         android:id="@+id/deleteBTN"
+        style="@style/DialogIconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="80dp"
-        android:tint="@color/pnk01"
         app:layout_constraintBottom_toBottomOf="@+id/closeBTN"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/closeBTN"

@@ -9,6 +9,37 @@
         <item name="android:windowBackground">@drawable/gd_pnk01_vio01</item>
         <item name="android:statusBarColor">@color/vio02</item>
         <item name="android:colorEdgeEffect">@color/vio01</item>
+        <item name="android:fontFamily">@font/cabin</item>
+    </style>
+
+    <style name="ScreenTitle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/wht01</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="TextButton">
+        <item name="android:background">@drawable/sh_rounded_rectangle_wht01_16dp</item>
+        <item name="android:textColor">@color/pnk01</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="ActionButton">
+        <item name="android:tint">@color/wht01</item>
+    </style>
+
+    <style name="DialogIconButton">
+        <item name="android:tint">@color/pnk01</item>
+    </style>
+
+    <style name="ProgressBar" parent="Base.Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/wht01</item>
+        <item name="android:indeterminate">true</item>
     </style>
 
 </resources>
