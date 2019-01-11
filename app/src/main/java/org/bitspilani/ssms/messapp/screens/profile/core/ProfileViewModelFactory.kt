@@ -12,11 +12,8 @@ class ProfileViewModelFactory : ViewModelProvider.Factory {
     @Inject
     lateinit var userRepository: UserRepository
 
-    init {
-        MessApp.appComponent.newProfileScreenComponent(ProfileScreenModule()).inject(this)
-    }
-
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        MessApp.appComponent.newProfileScreenComponent(ProfileScreenModule()).inject(this)
         return ProfileViewModel(userRepository) as T
     }
 }

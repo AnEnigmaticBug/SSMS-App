@@ -1,5 +1,6 @@
 package org.bitspilani.ssms.messapp.screens.menu.core
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.bitspilani.ssms.messapp.MessApp
@@ -12,11 +13,9 @@ class MenuViewModelFactory : ViewModelProvider.Factory {
     @Inject
     lateinit var menuRepository: MenuRepository
 
-    init {
-        MessApp.appComponent.newMenuScreenComponent(MenuScreenModule()).inject(this)
-    }
-
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        MessApp.appComponent.newMenuScreenComponent(MenuScreenModule()).inject(this)
+        Log.d("MenuViewModelFactory", "create")
         return MenuViewModel(menuRepository) as T
     }
 }

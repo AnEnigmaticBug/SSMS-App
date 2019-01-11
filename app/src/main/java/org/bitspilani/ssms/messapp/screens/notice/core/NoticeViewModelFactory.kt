@@ -12,11 +12,8 @@ class NoticeViewModelFactory : ViewModelProvider.Factory {
     @Inject
     lateinit var noticeRepository: NoticeRepository
 
-    init {
-        MessApp.appComponent.newNoticeScreenComponent(NoticeScreenModule()).inject(this)
-    }
-
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        MessApp.appComponent.newNoticeScreenComponent(NoticeScreenModule()).inject(this)
         return NoticeViewModel(noticeRepository) as T
     }
 }

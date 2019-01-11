@@ -12,11 +12,8 @@ class SplashViewModelFactory : ViewModelProvider.Factory {
     @Inject
     lateinit var userRepository: UserRepository
 
-    init {
-        MessApp.appComponent.newSplashScreenComponent(SplashScreenModule()).inject(this)
-    }
-
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        MessApp.appComponent.newSplashScreenComponent(SplashScreenModule()).inject(this)
         return SplashViewModel(userRepository) as T
     }
 }

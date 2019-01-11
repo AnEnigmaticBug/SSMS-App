@@ -12,11 +12,8 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
     @Inject
     lateinit var userRepository: UserRepository
 
-    init {
-        MessApp.appComponent.newLoginScreenComponent(LoginScreenModule()).inject(this)
-    }
-
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        MessApp.appComponent.newLoginScreenComponent(LoginScreenModule()).inject(this)
         return LoginViewModel(userRepository) as T
     }
 }
