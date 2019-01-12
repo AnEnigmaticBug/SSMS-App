@@ -17,4 +17,10 @@ class AppTypeConverters {
 
     @TypeConverter
     fun StringToLocalDateTime(st: String): LocalDateTime = LocalDateTime.parse(st)
+
+    @TypeConverter
+    fun SetToString(st: Set<String>): String = st.joinToString("~")
+
+    @TypeConverter
+    fun StringToSet(st: String): Set<String> = st.split("~").toSet()
 }
