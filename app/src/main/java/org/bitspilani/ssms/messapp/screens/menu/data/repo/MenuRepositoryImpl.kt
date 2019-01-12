@@ -1,6 +1,5 @@
 package org.bitspilani.ssms.messapp.screens.menu.data.repo
 
-import android.util.Log
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -75,11 +74,7 @@ class MenuRepositoryImpl(private val menuItemsDao: MenuItemsDao) : MenuRepositor
     override fun rateMenuItemWithId(id: Id, rating: Rating): Completable {
         return Completable.fromAction {
             menuItemsSubject.value?.modifyElement({ it.id == id }, { it.copy(rating = rating) })
-            menuItemsDao.getMenuItemById(id)
-                .take(1)
-                .subscribe {
-                    menuItemsDao.updateMenuItem(it.copy(rating = rating))
-                }
+            menuItemsDao.rateMenuItemWithId(id, rating)
         }.subscribeOn(Schedulers.io())
     }
 }
