@@ -72,7 +72,7 @@ class GrubRepositoryImpl(private val grubBatchesDao: GrubBatchesDao) : GrubRepos
     private fun DataLayerGrubBatch.toCoreLayer(): GrubBatch {
         return GrubBatch(menu, venue, price)
     }
-    
+
     private fun List<DataLayerGrubBatch>.toGrub(): Grub {
 
         fun DataLayerGrubBatch?.isSigned(): Boolean {
