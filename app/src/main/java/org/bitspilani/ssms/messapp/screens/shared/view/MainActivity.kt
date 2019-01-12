@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         navHostFRA.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             val currentItem = when(destination.id) {
+                R.id.grubListFragment -> 1
                 R.id.menuFragment     -> 2
                 R.id.noticeFragment   -> 3
                 R.id.moreFragment     -> 4
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
                     val destination = when(position) {
                         0    -> R.id.profileFragment
-                        1    -> R.id.menuFragment
+                        1    -> R.id.grubListFragment
                         3    -> R.id.noticeFragment
                         4    -> R.id.moreFragment
                         else -> throw IllegalStateException("BottomNav with position: $position")

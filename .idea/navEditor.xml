@@ -20,17 +20,34 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="grubListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="265" />
+                            <option name="y" value="1080" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="menuFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
                             <option name="x" value="12" />
-                            <option name="y" value="76" />
+                            <option name="y" value="88" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_menuFragment_to_grubListFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_menuFragment_to_moreFragment">
                               <value>
                                 <LayoutPositions />

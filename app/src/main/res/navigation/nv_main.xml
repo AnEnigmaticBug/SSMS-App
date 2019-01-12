@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_menuFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_grubListFragment"
+            app:destination="@id/grubListFragment" />
     </fragment>
     <fragment
         android:id="@+id/noticeFragment"
@@ -45,4 +48,9 @@
         android:name="org.bitspilani.ssms.messapp.screens.feedback.view.FeedbackFragment"
         android:label="FeedbackFragment"
         tools:layout="@layout/fra_feedback_working_state" />
+    <fragment
+        android:id="@+id/grubListFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.grub.grublist.view.GrubListFragment"
+        android:label="GrubListFragment"
+        tools:layout="@layout/fra_grub_list_working_state" />
 </navigation>
