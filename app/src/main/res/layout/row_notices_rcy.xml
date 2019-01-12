@@ -13,7 +13,7 @@
         android:id="@+id/priorityIndicatorPOV"
         android:layout_width="48dp"
         android:layout_height="0dp"
-        android:background="@drawable/sh_half_rounded_rectangle_16dp"
+        android:background="@drawable/sh_half_left_rounded_rectangle_16dp"
         android:backgroundTint="@color/pnk01"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

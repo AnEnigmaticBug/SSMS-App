@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:background="@drawable/sh_rounded_rectangle_wht01_16dp"
+    android:stateListAnimator="@animator/an_move_down_06dp_00dp_on_press">
+
+
+    <TextView
+        android:id="@+id/nameLBL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/blk01"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toStartOf="@+id/dateLBL"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Dilli Darbar" />
+
+    <TextView
+        android:id="@+id/dateLBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/gry02"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/nameLBL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nameLBL"
+        tools:text="October, 25" />
+
+    <TextView
+        android:id="@+id/organizerLBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/gry02"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/nameLBL"
+        app:layout_constraintTop_toBottomOf="@+id/nameLBL"
+        tools:text="By: Capitol" />
+
+    <TextView
+        android:id="@+id/typeLBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="24dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/gry02"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/organizerLBL"
+        app:layout_constraintTop_toBottomOf="@+id/organizerLBL"
+        tools:text="Type: Veg + Non-Veg" />
+</androidx.constraintlayout.widget.ConstraintLayout>
