@@ -6,12 +6,20 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
 import org.bitspilani.ssms.messapp.screens.menu.data.repo.MenuRepository
 import org.bitspilani.ssms.messapp.screens.menu.data.repo.MenuRepositoryImpl
 import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsDao
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepositoryImpl
+import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.UserService
+import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.setup.BaseInterceptor
 import org.bitspilani.ssms.messapp.screens.shared.data.room.setup.AppDatabase
+import org.bitspilani.ssms.messapp.util.NetworkWatcher
+import org.bitspilani.ssms.messapp.util.NetworkWatcherImpl
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -24,8 +32,28 @@ class AppModule(private val application: Application) {
     fun providesMenuItemsDao(appDatabase: AppDatabase): MenuItemsDao = appDatabase.menuItemsDao()
 
     @Provides @Singleton
-    fun providesUserRepository(sharedPreferences: SharedPreferences): UserRepository {
-        return UserRepositoryImpl(sharedPreferences)
+    fun providesUserRepository(sharedPreferences: SharedPreferences, networkWatcher: NetworkWatcher, userService: UserService): UserRepository {
+        return UserRepositoryImpl(sharedPreferences, networkWatcher, userService)
+    }
+
+    @Provides
+    fun providesLoginService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
+    }
+
+    @Provides @Singleton
+    fun providesRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("http://carbocation.pythonanywhere.com/")
+            .client(OkHttpClient().newBuilder().addInterceptor(BaseInterceptor()).build())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+    }
+
+    @Provides @Singleton
+    fun providesNetworkWatcher(application: Application): NetworkWatcher {
+        return NetworkWatcherImpl(application)
     }
 
     @Provides @Singleton

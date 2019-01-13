@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
 
 fun CompositeDisposable.set(disposable: Disposable) {
     clear()
@@ -22,4 +25,8 @@ fun<T> List<T>.modifyElement(condition: (elem: T) -> Boolean, action: (elem: T) 
     return this.toMutableList().also { _mutableList ->
         _mutableList[i] = action.invoke(_mutableList[i])
     }
+}
+
+fun JSONObject.toRequestBody(): RequestBody {
+    return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), this.toString())
 }
