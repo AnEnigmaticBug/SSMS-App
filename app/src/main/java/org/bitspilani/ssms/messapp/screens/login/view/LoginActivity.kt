@@ -2,10 +2,15 @@ package org.bitspilani.ssms.messapp.screens.login.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import kotlinx.android.synthetic.main.act_login_working_state.*
 import kotlinx.android.synthetic.main.act_login_working_state.view.*
 import org.bitspilani.ssms.messapp.R
@@ -16,10 +21,20 @@ import org.bitspilani.ssms.messapp.screens.shared.view.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var viewModel: LoginViewModel
+
+    private val reqCode = 112
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("1049401481776-uvbpahin8kfeu7e810i88nmmlmmjcefo.apps.googleusercontent.com")
+            .requestProfile()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         setContentView(R.layout.act_login_working_state)
 
@@ -28,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
         (rootPOV as ConstraintLayout).loadLayoutDescription(R.xml.ctl_states_act_login)
 
         rootPOV.signInBTN.setOnClickListener {
-            viewModel.onLoginAction("2vwsd2g", "https://avatars0.githubusercontent.com/u/37890870?s=460&v=4")
+            startActivityForResult(googleSignInClient.signInIntent, reqCode)
         }
 
         viewModel.order.observe(this, Observer {
@@ -43,7 +58,22 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == reqCode) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                viewModel.onLoginAction(account!!.idToken!!, account.photoUrl.toString())
+            } catch(e: ApiException) {
+                Toast.makeText(this, "Google sign in failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun showWorkingState() {
+        googleSignInClient.signOut()
         (rootPOV as ConstraintLayout).setState(R.id.working, 0, 0)
     }
 
