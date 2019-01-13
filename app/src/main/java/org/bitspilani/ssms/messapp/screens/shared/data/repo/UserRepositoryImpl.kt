@@ -1,15 +1,27 @@
 package org.bitspilani.ssms.messapp.screens.shared.data.repo
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 import org.bitspilani.ssms.messapp.screens.shared.core.model.User
+import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.UserService
+import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.model.UserResponse
+import org.bitspilani.ssms.messapp.util.NetworkWatcher
+import org.bitspilani.ssms.messapp.util.NoConnectionException
+import org.bitspilani.ssms.messapp.util.toRequestBody
+import org.json.JSONObject
+import retrofit2.Response
 import java.util.*
-import java.util.concurrent.TimeUnit
+import java.util.function.BiConsumer
 
-class UserRepositoryImpl(private val prefs: SharedPreferences) : UserRepository {
+class UserRepositoryImpl(
+    private val prefs: SharedPreferences,
+    private val networkWatcher: NetworkWatcher,
+    private val userService: UserService
+) : UserRepository {
 
     object Keys {
 
@@ -22,10 +34,29 @@ class UserRepositoryImpl(private val prefs: SharedPreferences) : UserRepository 
     }
 
     override fun login(idToken: String, profilePicUrl: String): Completable {
-        return Completable.fromAction {
-            setUser(User("2017A6PS0666P", "Creeping Monster", "MR 2108", profilePicUrl, "lkjgs;lkjg;qkj;lkjl;3lk4ljdkljalkdgj;ldkjg;ldjkg;aldjsgalkdsjgal;kjg;k", "JWT lol"))
-                .subscribe()
-        }.delay(3, TimeUnit.SECONDS)
+
+        fun UserResponse.toUser(): User {
+            return User(id, name, roomNo, profilePicUrl, qrCode, jwt)
+        }
+
+        if(!networkWatcher.isConnectedToInternet()) {
+            return Completable.error(NoConnectionException("Not connected to the internet"))
+        }
+
+        val body = JSONObject().also { it.put("id_token", idToken) }.toRequestBody()
+        return userService.login(body)
+            .map { _response ->
+                Log.d("UserRepositoryImpl", "${_response.code()}: ${_response.errorBody()?.string()}")
+                when(_response.code()) {
+                    200  -> _response.body()!!.toUser()
+                    else -> throw Exception("${_response.code()}")
+                }
+            }
+            .doOnSuccess { _user ->
+                setUser(_user).subscribe()
+            }
+            .ignoreElement()
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getUser(): Maybe<User> {
