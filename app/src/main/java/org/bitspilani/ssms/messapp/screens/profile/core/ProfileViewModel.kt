@@ -8,6 +8,8 @@ import io.reactivex.disposables.CompositeDisposable
 import org.bitspilani.ssms.messapp.screens.profile.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.profile.view.model.ViewLayerUser
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
+import org.bitspilani.ssms.messapp.util.NoConnectionException
+import org.bitspilani.ssms.messapp.util.NoLoggedUserException
 import org.bitspilani.ssms.messapp.util.set
 import org.bitspilani.ssms.messapp.util.toMut
 
@@ -54,7 +56,14 @@ class ProfileViewModel(private val uRepo: UserRepository) : ViewModel() {
                     toast.toMut().postValue("QR Code refreshed successfully")
                 },
                 {
-                    order.toMut().postValue(UiOrder.ShowFailure("Something went wrong :("))
+                    when(it) {
+                        is NoConnectionException -> {
+                            updateUser()
+                            toast.toMut().postValue("No internet connection")
+                        }
+                        is NoLoggedUserException -> order.toMut().postValue(UiOrder.MoveToLogin)
+                        else                     -> order.toMut().postValue(UiOrder.ShowFailure("Something went wrong :("))
+                    }
                 }
             ))
     }
