@@ -5,12 +5,14 @@ import android.util.Log
 import androidx.core.content.edit
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.bitspilani.ssms.messapp.screens.shared.core.model.User
 import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.UserService
 import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.model.UserResponse
 import org.bitspilani.ssms.messapp.util.NetworkWatcher
 import org.bitspilani.ssms.messapp.util.NoConnectionException
+import org.bitspilani.ssms.messapp.util.NoLoggedUserException
 import org.bitspilani.ssms.messapp.util.toRequestBody
 import org.json.JSONObject
 import retrofit2.Response
@@ -64,7 +66,7 @@ class UserRepositoryImpl(
         val name = prefs.getString(Keys.name, null)
         val room = prefs.getString(Keys.room, null)
         val profilePicUrl = prefs.getString(Keys.profilePicUrl, null)
-        val qrCode = prefs.getString(Keys.room, null)
+        val qrCode = prefs.getString(Keys.qrCode, null)
         val jwt = prefs.getString(Keys.room, null)
 
         if(listOf(id, name, room, profilePicUrl, qrCode, jwt).contains(null)) {
@@ -88,14 +90,27 @@ class UserRepositoryImpl(
     }
 
     override fun refreshQrCode(): Completable {
-        return Completable.fromAction {
-            if(getUser().isEmpty.blockingGet() == true) {
-                throw IllegalStateException("Can't refresh token for a non-logged in user")
+        if(!networkWatcher.isConnectedToInternet()) {
+            return Completable.error(NoConnectionException("Not connected to the internet"))
+        }
+        return getUser()
+            .switchIfEmpty(Single.error(NoLoggedUserException("User isn't logged in")))
+            .flatMap { _user ->
+                userService.refreshQrCode(_user.jwt)
             }
-
-            prefs.edit(commit = true) {
-                putString(Keys.qrCode, UUID.randomUUID().toString().substring(0..30))
+            .map { _response ->
+                Log.d("UserRepositoryImpl", "${_response.code()}: ${_response.errorBody()?.string()}")
+                when(_response.code()) {
+                    200  -> _response.body()!!.qrCode
+                    else -> throw Exception("${_response.code()}")
+                }
             }
-        }.subscribeOn(Schedulers.io())
+            .doOnSuccess { _qrCode ->
+                prefs.edit(commit = true) {
+                    putString(Keys.qrCode, _qrCode)
+                }
+            }
+            .ignoreElement()
+            .subscribeOn(Schedulers.io())
     }
 }
