@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.noticeFragment   -> 3
                 R.id.moreFragment     -> 4
                 R.id.feedbackFragment -> 4
+                R.id.aboutFragment    -> 4
                 else                  -> 2
             }
             if(bottomNavAHB.currentItem != currentItem) {
