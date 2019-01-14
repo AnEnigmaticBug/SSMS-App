@@ -14,6 +14,12 @@ interface NoticesDao {
     @Query("SELECT * FROM Notices")
     fun getAllNotices(): Flowable<List<DataLayerNotice>>
 
+    @Query("SELECT id FROM Notices")
+    fun getAllIds(): List<Id>
+
+    @Query("SELECT COUNT(id) FROM Notices")
+    fun getNoticeCount(): Flowable<Int>
+
     @Insert(onConflict = OnConflictStrategy.FAIL)
     fun insertNotices(notices: List<DataLayerNotice>)
 
