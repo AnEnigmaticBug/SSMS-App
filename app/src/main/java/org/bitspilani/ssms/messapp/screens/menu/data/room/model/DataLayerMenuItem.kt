@@ -9,7 +9,9 @@ import org.threeten.bp.LocalDate
 
 @Entity(tableName = "MenuItems")
 data class DataLayerMenuItem(
-    @PrimaryKey val id: Id,
+    @PrimaryKey(autoGenerate = true) val id: Id,
+    val itemId: Long,
+    val mealId: Long,
     val name: String,
     val date: LocalDate,
     val meal: Meal,

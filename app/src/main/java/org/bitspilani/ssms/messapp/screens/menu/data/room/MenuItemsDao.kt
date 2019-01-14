@@ -5,6 +5,7 @@ import io.reactivex.Flowable
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Id
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Rating
 import org.bitspilani.ssms.messapp.screens.menu.data.room.model.DataLayerMenuItem
+import org.threeten.bp.LocalDate
 
 @Dao
 interface MenuItemsDao {
@@ -14,6 +15,12 @@ interface MenuItemsDao {
 
     @Query("SELECT * FROM MenuItems WHERE id = :id")
     fun getMenuItemById(id: Id): Flowable<DataLayerMenuItem>
+
+    @Query("SELECT COUNT(id) FROM MenuItems")
+    fun getMenuItemCount(): Flowable<Int>
+
+    @Query("SELECT MAX(date) FROM MenuItems")
+    fun getLatestStoredDate(): Flowable<LocalDate>
 
     @Insert(onConflict = OnConflictStrategy.FAIL)
     fun insertMenuItems(menuItems: List<DataLayerMenuItem>)
