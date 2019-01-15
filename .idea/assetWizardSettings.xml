@@ -3,6 +3,53 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState>
+              <option name="children">
+                <map>
+                  <entry key="imageAssetPanel">
+                    <value>
+                      <PersistentState>
+                        <option name="children">
+                          <map>
+                            <entry key="launcher">
+                              <value>
+                                <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="foregroundImage">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="scalingPercent" value="60" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="backgroundImage" value="$USER_HOME$/Downloads/messapp/icons/im_app_logo_background.png" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Downloads/messapp/raster/ic_launcher_foreground.png" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </PersistentState>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </PersistentState>
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -14,11 +61,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="height" value="240" />
-                            <entry key="outputName" value="ic_splash_240dp_240dp" />
+                            <entry key="height" value="120" />
+                            <entry key="outputName" value="ic_bob_120dp_120dp" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="$USER_HOME$/Downloads/messapp/icons/splash.svg" />
-                            <entry key="width" value="240" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/messapp/icons/bob.svg" />
+                            <entry key="width" value="120" />
                           </map>
                         </option>
                       </PersistentState>
