@@ -16,6 +16,9 @@ interface MenuItemsDao {
     @Query("SELECT * FROM MenuItems WHERE id = :id")
     fun getMenuItemById(id: Id): Flowable<DataLayerMenuItem>
 
+    @Query("SELECT * FROM MenuItems WHERE rating != 'NotRated'")
+    fun getAllRatedMenuItems(): Flowable<List<DataLayerMenuItem>>
+
     @Query("SELECT COUNT(id) FROM MenuItems")
     fun getMenuItemCount(): Flowable<Int>
 
