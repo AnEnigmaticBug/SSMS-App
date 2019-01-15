@@ -1,6 +1,8 @@
 package org.bitspilani.ssms.messapp.di.app
 
 import dagger.Component
+import org.bitspilani.ssms.messapp.di.screens.contact.ContactScreenComponent
+import org.bitspilani.ssms.messapp.di.screens.contact.ContactScreenModule
 import org.bitspilani.ssms.messapp.di.screens.feedback.FeedbackScreenComponent
 import org.bitspilani.ssms.messapp.di.screens.feedback.FeedbackScreenModule
 import org.bitspilani.ssms.messapp.di.screens.grub.shared.GrubScreenComponent
@@ -33,4 +35,6 @@ interface AppComponent {
     fun newFeedbackScreenComponent(m1: FeedbackScreenModule): FeedbackScreenComponent
 
     fun newGrubScreenComponent(m1: GrubScreenModule): GrubScreenComponent
+
+    fun newContactScreenComponent(m1: ContactScreenModule): ContactScreenComponent
 }
