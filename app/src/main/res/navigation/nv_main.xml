@@ -42,6 +42,11 @@
             app:destination="@id/aboutFragment"
             app:enterAnim="@anim/an_fade_in"
             app:exitAnim="@anim/an_fade_out" />
+        <action
+            android:id="@+id/action_moreFragment_to_sickFoodFragment"
+            app:destination="@id/sickFoodFragment"
+            app:enterAnim="@anim/an_fade_in"
+            app:exitAnim="@anim/an_fade_out" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -63,4 +68,9 @@
         android:name="org.bitspilani.ssms.messapp.screens.about.view.AboutFragment"
         android:label="AboutFragment"
         tools:layout="@layout/fra_about" />
+    <fragment
+        android:id="@+id/sickFoodFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.sickfood.view.SickFoodFragment"
+        android:label="SickFoodFragment"
+        tools:layout="@layout/fra_sick_food" />
 </navigation>

@@ -29,9 +29,10 @@ class MoreOptionsAdapter : RecyclerView.Adapter<MoreOptionsAdapter.MoreOptionVHo
 
         holder.rootPOV.setOnClickListener {
             val actionId = when(option) {
-                "Feedback" -> R.id.action_moreFragment_to_feedbackFragment
-                "About"    -> R.id.action_moreFragment_to_aboutFragment
-                else       -> throw IllegalStateException("Non-existent option  selected in more screen")
+                "Feedback"  -> R.id.action_moreFragment_to_feedbackFragment
+                "About"     -> R.id.action_moreFragment_to_aboutFragment
+                "Sick Food" -> R.id.action_moreFragment_to_sickFoodFragment
+                else        -> throw IllegalStateException("Non-existent option  selected in more screen")
             }
             holder.rootPOV.findNavController().navigate(actionId)
         }
