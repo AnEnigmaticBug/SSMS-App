@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstraintLayoutStates xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <State
+        android:id="@+id/loading"
+        app:constraints="@layout/fra_contact_loading_state" />
+    <State
+        android:id="@+id/working"
+        app:constraints="@layout/fra_contact_working_state" />
+    <State
+        android:id="@+id/failure"
+        app:constraints="@layout/fra_contact_failure_state" />
+</ConstraintLayoutStates>
