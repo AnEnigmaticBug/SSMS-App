@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/sh_rounded_rectangle_wht01_16dp"
+    android:elevation="4dp">
+
+    <ImageView
+        android:id="@+id/picIMG"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_profile_pic_placeholder_100dp_100dp" />
+
+    <TextView
+        android:id="@+id/nameLBL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/pnk01"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/picIMG"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Satwadhi\nDas" />
+
+    <TextView
+        android:id="@+id/postLBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gry02"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/nameLBL"
+        app:layout_constraintStart_toStartOf="@+id/nameLBL"
+        app:layout_constraintTop_toBottomOf="@+id/nameLBL"
+        tools:text="President, SSMS" />
+
+    <TextView
+        android:id="@+id/phoneLBL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/blu01"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/postLBL"
+        app:layout_constraintStart_toStartOf="@+id/postLBL"
+        app:layout_constraintTop_toBottomOf="@+id/postLBL"
+        tools:text="+91 9426960433" />
+</androidx.constraintlayout.widget.ConstraintLayout>
