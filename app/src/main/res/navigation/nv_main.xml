@@ -48,6 +48,11 @@
             app:enterAnim="@anim/an_fade_in"
             app:exitAnim="@anim/an_fade_out" />
         <action
+            android:id="@+id/action_moreFragment_to_contactFragment"
+            app:destination="@id/contactFragment"
+            app:enterAnim="@anim/an_fade_in"
+            app:exitAnim="@anim/an_fade_out" />
+        <action
             android:id="@+id/action_moreFragment_to_techTeamFragment"
             app:destination="@id/techTeamFragment"
             app:enterAnim="@anim/an_fade_in"
@@ -78,6 +83,11 @@
         android:name="org.bitspilani.ssms.messapp.screens.sickfood.view.SickFoodFragment"
         android:label="SickFoodFragment"
         tools:layout="@layout/fra_sick_food" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.contact.view.ContactFragment"
+        android:label="ContactFragment"
+        tools:layout="@layout/fra_contact_working_state" />
     <fragment
         android:id="@+id/techTeamFragment"
         android:name="org.bitspilani.ssms.messapp.screens.techteam.view.TechTeamFragment"

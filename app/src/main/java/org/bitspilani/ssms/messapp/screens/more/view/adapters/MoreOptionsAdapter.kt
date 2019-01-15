@@ -12,7 +12,7 @@ import org.bitspilani.ssms.messapp.R
 class MoreOptionsAdapter : RecyclerView.Adapter<MoreOptionsAdapter.MoreOptionVHolder>() {
 
     private val options = listOf(
-        "Our Team", "Feedback", "Contact Us", "About", "Sick Food"
+        "Our Team", "Feedback", "GC Members", "About", "Sick Food"
     )
 
     override fun getItemCount() = options.size
@@ -29,11 +29,12 @@ class MoreOptionsAdapter : RecyclerView.Adapter<MoreOptionsAdapter.MoreOptionVHo
 
         holder.rootPOV.setOnClickListener {
             val actionId = when(option) {
-                "Feedback"  -> R.id.action_moreFragment_to_feedbackFragment
-                "About"     -> R.id.action_moreFragment_to_aboutFragment
-                "Sick Food" -> R.id.action_moreFragment_to_sickFoodFragment
-                "Our Team"  -> R.id.action_moreFragment_to_techTeamFragment
-                else        -> throw IllegalStateException("Non-existent option  selected in more screen")
+                "Feedback"   -> R.id.action_moreFragment_to_feedbackFragment
+                "About"      -> R.id.action_moreFragment_to_aboutFragment
+                "Sick Food"  -> R.id.action_moreFragment_to_sickFoodFragment
+                "GC Members" -> R.id.action_moreFragment_to_contactFragment
+                "Our Team"   -> R.id.action_moreFragment_to_techTeamFragment
+                else         -> throw IllegalStateException("Non-existent option  selected in more screen")
             }
             holder.rootPOV.findNavController().navigate(actionId)
         }

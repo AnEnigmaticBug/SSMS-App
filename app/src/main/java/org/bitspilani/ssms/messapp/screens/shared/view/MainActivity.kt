@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.feedbackFragment -> 4
                 R.id.aboutFragment    -> 4
                 R.id.sickFoodFragment -> 4
+                R.id.contactFragment  -> 4
                 R.id.techTeamFragment -> 4
                 else                  -> 2
             }
