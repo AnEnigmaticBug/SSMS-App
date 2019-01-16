@@ -16,7 +16,7 @@ interface ContactsDao {
     @Query("SELECT COUNT(name) FROM Contacts")
     fun getContactCount(): Flowable<Int>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertContacts(contacts: List<DataLayerContact>)
 
     @Query("DELETE FROM Contacts")

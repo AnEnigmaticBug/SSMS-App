@@ -25,7 +25,7 @@ interface MenuItemsDao {
     @Query("SELECT MAX(date) FROM MenuItems")
     fun getLatestStoredDate(): Flowable<LocalDate>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMenuItems(menuItems: List<DataLayerMenuItem>)
 
     @Update

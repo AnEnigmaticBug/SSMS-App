@@ -20,7 +20,7 @@ interface NoticesDao {
     @Query("SELECT COUNT(id) FROM Notices")
     fun getNoticeCount(): Flowable<Int>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNotices(notices: List<DataLayerNotice>)
 
     @Query("DELETE FROM Notices")

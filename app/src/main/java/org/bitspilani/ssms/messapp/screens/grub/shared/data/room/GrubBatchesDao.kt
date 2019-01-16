@@ -17,7 +17,7 @@ interface GrubBatchesDao {
     @Query("SELECT id FROM GrubBatches WHERE grubInstanceId = :grubInstanceId AND isVeg = :isVeg")
     fun getGrubBatchId(grubInstanceId: Id, isVeg: Boolean): Long
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGrubBatches(grubBatches: List<DataLayerGrubBatch>)
 
     @Update
