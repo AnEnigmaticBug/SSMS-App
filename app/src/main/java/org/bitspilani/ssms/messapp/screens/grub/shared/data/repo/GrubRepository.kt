@@ -29,7 +29,6 @@ interface GrubRepository {
 
     /**
      * @param id   specifies which grub to  cancel.
-     * @param type  specifies the batch to  cancel.
      * */
-    fun cancelGrubWithId(id: Id, type: FoodType): Completable
+    fun cancelGrubWithId(id: Id): Completable
 }

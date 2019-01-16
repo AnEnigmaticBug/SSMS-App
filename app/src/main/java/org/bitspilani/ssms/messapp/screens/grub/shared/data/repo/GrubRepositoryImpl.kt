@@ -55,9 +55,8 @@ class GrubRepositoryImpl(private val grubBatchesDao: GrubBatchesDao) : GrubRepos
             .delay(2, TimeUnit.SECONDS)
     }
 
-    override fun cancelGrubWithId(id: Id, type: FoodType): Completable {
+    override fun cancelGrubWithId(id: Id): Completable {
         return Completable.fromAction {
-            val batchId = grubBatchesDao.getGrubBatchId(id, type)
         }
             .subscribeOn(Schedulers.io())
             .delay(2, TimeUnit.SECONDS)
