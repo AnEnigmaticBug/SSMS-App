@@ -3,6 +3,7 @@ package org.bitspilani.ssms.messapp.screens.shared.data.room.setup
 import androidx.room.TypeConverter
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 
 class AppTypeConverters {
 
@@ -11,6 +12,12 @@ class AppTypeConverters {
 
     @TypeConverter
     fun StringToLocalDate(st: String): LocalDate = LocalDate.parse(st)
+
+    @TypeConverter
+    fun LocalTimeToString(lt: LocalTime): String = lt.toString()
+
+    @TypeConverter
+    fun StringToLocalTime(st: String): LocalTime = LocalTime.parse(st)
 
     @TypeConverter
     fun LocalDateTimeToString(dt: LocalDateTime): String = dt.toString()

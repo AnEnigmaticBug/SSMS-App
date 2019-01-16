@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import org.bitspilani.ssms.messapp.screens.contact.data.room.ContactsDao
 import org.bitspilani.ssms.messapp.screens.contact.data.room.model.DataLayerContact
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.GrubBatchesDao
+import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.GrubBatchesTypeConverters
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.model.DataLayerGrubBatch
 import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsDao
 import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsTypeConverters
@@ -15,7 +16,7 @@ import org.bitspilani.ssms.messapp.screens.notice.data.room.NoticesTypeConverter
 import org.bitspilani.ssms.messapp.screens.notice.data.room.model.DataLayerNotice
 
 @Database(entities = [DataLayerMenuItem::class, DataLayerNotice::class, DataLayerGrubBatch::class, DataLayerContact::class], version = 1)
-@TypeConverters(AppTypeConverters::class, MenuItemsTypeConverters::class, NoticesTypeConverters::class)
+@TypeConverters(AppTypeConverters::class, MenuItemsTypeConverters::class, NoticesTypeConverters::class, GrubBatchesTypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun menuItemsDao(): MenuItemsDao

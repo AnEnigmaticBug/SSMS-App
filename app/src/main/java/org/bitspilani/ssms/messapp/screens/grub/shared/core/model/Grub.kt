@@ -1,22 +1,8 @@
 package org.bitspilani.ssms.messapp.screens.grub.shared.core.model
 
-import org.threeten.bp.LocalDateTime
-
-typealias Id = Long
-
 /**
  * Represents a grub. A grub may or may not have both veg and non-veg options.
- * If an option isn't present, it is null.
- *
- * @property cancellationLimit  is the last time by which you can cancel grub.
+ * Those options are represented by batches here. If an option is not present,
+ * it is null.
  * */
-data class Grub(
-    val id: Id,
-    val name: String,
-    val organizer: String,
-    val datetime: LocalDateTime,
-    val cancellationLimit: LocalDateTime,
-    val vegBatch: GrubBatch?,
-    val nonVegBatch: GrubBatch?,
-    val status: Status
-)
+data class Grub(val details: GrubDetails, val vegBatch: GrubBatch?, val nonVegBatch: GrubBatch?)

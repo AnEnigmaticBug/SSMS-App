@@ -7,5 +7,5 @@ data class ViewLayerGrub(
     val name: String,
     val organizer: String,
     val date: String,
-    val type: String
+    val foodOption: String
 )

@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.bitspilani.ssms.messapp.screens.grub.grublist.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.grub.grublist.view.model.ViewLayerGrub
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.FoodOption
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.Grub
-import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.Status
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.GrubDetails
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.SigningStatus
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.repo.GrubRepository
 import org.bitspilani.ssms.messapp.util.NoLoggedUserException
 import org.bitspilani.ssms.messapp.util.set
@@ -40,9 +42,17 @@ class GrubListViewModel(private val gRepo: GrubRepository) : ViewModel() {
 
 
     private fun showGrubs(viewOnlySigned: Boolean) {
-        d1.set(gRepo.getAllGrubs()
+
+        fun GrubDetails.isSigned(): Boolean {
+            return signingStatus == SigningStatus.SignedForVeg || signingStatus == SigningStatus.SignedForNonVeg
+        }
+
+        d1.set(gRepo.getAllGrubDetails()
             .map { _grubs ->
-                _grubs.filter { !viewOnlySigned || it.isSigned() }.sortedByDescending { it.datetime }.map { it.toViewLayer() }
+                _grubs
+                    .filter { !viewOnlySigned || it.isSigned() }
+                    .sortedByDescending {it.date }
+                    .map { it.toViewLayer() }
             }
             .subscribe(
                 { _grubs ->
@@ -62,20 +72,14 @@ class GrubListViewModel(private val gRepo: GrubRepository) : ViewModel() {
         showGrubs(false)
     }
 
-
-    private fun Grub.isSigned(): Boolean {
-        return this.status == Status.SignedForVeg || this.status == Status.SignedForNonVeg
-    }
-
-    private fun Grub.toViewLayer(): ViewLayerGrub {
-        val date = "${datetime.month.toString().toLowerCase().capitalize()}, ${datetime.dayOfMonth}"
-        val type = when {
-            vegBatch == null && nonVegBatch != null -> "Non-Veg"
-            vegBatch != null && nonVegBatch == null -> "Veg"
-            vegBatch != null && nonVegBatch != null -> "Veg + Non-Veg"
-            else                                    -> throw IllegalArgumentException("Grub contains no batch")
+    private fun GrubDetails.toViewLayer(): ViewLayerGrub {
+        val date = "${date.month.toString().toLowerCase().capitalize()}, ${date.dayOfMonth}"
+        val foodOption = when(foodOption) {
+            FoodOption.NonVeg       -> "Non-Veg"
+            FoodOption.Veg          -> "Veg"
+            FoodOption.VegAndNonVeg -> "Veg + Non-Veg"
         }
-        return ViewLayerGrub(id, name, "By: $organizer", date, "Type: $type")
+        return ViewLayerGrub(id, name, "By: $organizer", date, "Type: $foodOption")
     }
 
 

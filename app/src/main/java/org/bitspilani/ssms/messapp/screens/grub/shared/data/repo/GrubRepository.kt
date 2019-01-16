@@ -3,21 +3,13 @@ package org.bitspilani.ssms.messapp.screens.grub.shared.data.repo
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.FoodType
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.Grub
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.GrubDetails
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.Id
 import org.threeten.bp.LocalDateTime
 
 interface GrubRepository {
-
-    enum class GrubType {
-
-        Veg, NonVeg
-    }
-
-    /**
-     * This is Maybe.empty() if the data hasn't been retrieved even once.
-     * */
-    fun getLastUpdatedDateTime(): Maybe<LocalDateTime>
 
     /**
      * This makes the repository fetch the grubs data from online source.
@@ -25,11 +17,19 @@ interface GrubRepository {
      * */
     fun forceDataRefresh(): Completable
 
-    fun getAllGrubs(): Observable<List<Grub>>
+    fun getAllGrubDetails(): Observable<List<GrubDetails>>
 
     fun getGrubById(id: Id): Observable<Grub>
 
-    fun signUpGrubWithId(id: Id, type: GrubType): Completable
+    /**
+     * @param id   specifies which grub to sign-up.
+     * @param type  specifies the batch to sign-up.
+     * */
+    fun signUpGrubWithId(id: Id, type: FoodType): Completable
 
-    fun cancelGrubWithId(id: Id, type: GrubType): Completable
+    /**
+     * @param id   specifies which grub to  cancel.
+     * @param type  specifies the batch to  cancel.
+     * */
+    fun cancelGrubWithId(id: Id, type: FoodType): Completable
 }

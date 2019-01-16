@@ -15,13 +15,13 @@ import kotlinx.android.synthetic.main.fra_grub_list_working_state.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.grub.grublist.core.GrubListViewModel
 import org.bitspilani.ssms.messapp.screens.grub.grublist.core.GrubListViewModelFactory
-import org.bitspilani.ssms.messapp.screens.grub.grublist.view.adapters.GrubsAdapter
+import org.bitspilani.ssms.messapp.screens.grub.grublist.view.adapters.GrubDetailsAdapter
 import org.bitspilani.ssms.messapp.screens.grub.grublist.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.grub.grublist.view.model.ViewLayerGrub
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.Id
 import org.bitspilani.ssms.messapp.screens.login.view.LoginActivity
 
-class GrubListFragment : Fragment(), GrubsAdapter.ClickListener {
+class GrubListFragment : Fragment(), GrubDetailsAdapter.ClickListener {
 
     private lateinit var viewModel: GrubListViewModel
 
@@ -32,7 +32,7 @@ class GrubListFragment : Fragment(), GrubsAdapter.ClickListener {
 
         (rootPOV as ConstraintLayout).loadLayoutDescription(R.xml.ctl_states_fra_grub_list)
 
-        rootPOV.grubsRCY.adapter = GrubsAdapter(this)
+        rootPOV.grubDetailsRCY.adapter = GrubDetailsAdapter(this)
 
         rootPOV.retryBTN.setOnClickListener {
             viewModel.onRetryAction()
@@ -71,7 +71,7 @@ class GrubListFragment : Fragment(), GrubsAdapter.ClickListener {
 
     private fun showWorkingState(grubs: List<ViewLayerGrub>, viewOnlySigned: Boolean) {
         (view as ConstraintLayout).setState(R.id.working, 0, 0)
-        (view?.grubsRCY?.adapter as GrubsAdapter).grubs = grubs
+        (view?.grubDetailsRCY?.adapter as GrubDetailsAdapter).grubs = grubs
 
         val pnkColor = ContextCompat.getColor(context!!, R.color.pnk01)
         val whtColor = ContextCompat.getColor(context!!, R.color.wht01)

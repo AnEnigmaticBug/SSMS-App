@@ -6,7 +6,7 @@ package org.bitspilani.ssms.messapp.screens.grub.shared.core.model
  * [Available]  means that  the user hasn't signed up for  the grub but he can.
  * [NotAvailable] means that the user hasn't signed up for the grub & he can't.
  * */
-enum class Status {
+enum class SigningStatus {
 
     SignedForVeg, SignedForNonVeg, Available, NotAvailable
 }

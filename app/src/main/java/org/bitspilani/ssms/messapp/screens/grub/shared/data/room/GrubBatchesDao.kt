@@ -2,20 +2,22 @@ package org.bitspilani.ssms.messapp.screens.grub.shared.data.room
 
 import androidx.room.*
 import io.reactivex.Flowable
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.FoodType
+import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.GrubDetails
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.Id
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.model.DataLayerGrubBatch
 
 @Dao
 interface GrubBatchesDao {
 
-    @Query("SELECT * FROM GrubBatches")
-    fun getAllGrubBatches(): Flowable<List<DataLayerGrubBatch>>
+    @Query("SELECT DISTINCT grubId grubId, name, organizer, foodOption, date, slot1Time, slot2Time, signUpDeadline, cancelDeadline, signingStatus, slot FROM GrubBatches")
+    fun getAllGrubDetails(): Flowable<List<GrubDetails>>
 
-    @Query("SELECT * FROM GrubBatches WHERE grubInstanceId = :grubInstanceId")
-    fun getGrubBatchesByGrubInstanceId(grubInstanceId: Id): Flowable<List<DataLayerGrubBatch>>
+    @Query("SELECT * FROM GrubBatches WHERE grubId = :grubId")
+    fun getGrubBatchesByGrubId(grubId: Id): Flowable<List<DataLayerGrubBatch>>
 
-    @Query("SELECT id FROM GrubBatches WHERE grubInstanceId = :grubInstanceId AND isVeg = :isVeg")
-    fun getGrubBatchId(grubInstanceId: Id, isVeg: Boolean): Long
+    @Query("SELECT id FROM GrubBatches WHERE grubId = :grubId AND foodType = :foodType")
+    fun getGrubBatchId(grubId: Id, foodType: FoodType): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGrubBatches(grubBatches: List<DataLayerGrubBatch>)
