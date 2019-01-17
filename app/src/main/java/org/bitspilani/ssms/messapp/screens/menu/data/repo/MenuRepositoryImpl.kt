@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Id
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Meal
 import org.bitspilani.ssms.messapp.screens.menu.core.model.MenuItem
@@ -13,9 +12,7 @@ import org.bitspilani.ssms.messapp.screens.menu.data.retrofit.MenuService
 import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsDao
 import org.bitspilani.ssms.messapp.screens.menu.data.room.model.DataLayerMenuItem
 import org.bitspilani.ssms.messapp.util.NetworkWatcher
-import org.bitspilani.ssms.messapp.util.NoConnectionException
 import org.bitspilani.ssms.messapp.util.NoDataSourceException
-import org.bitspilani.ssms.messapp.util.modifyElement
 import org.threeten.bp.LocalDate
 
 class MenuRepositoryImpl(
@@ -24,64 +21,57 @@ class MenuRepositoryImpl(
     private val menuService: MenuService
 ) : MenuRepository {
 
-    private val menuItemsSubject = BehaviorSubject.create<List<MenuItem>>()
-
-
-    init {
-        menuItemsDao.getAllMenuItems()
-            .subscribeOn(Schedulers.io())
-            .filter { it.isNotEmpty() }
-            .map { _items -> _items.map { it.toCoreLayer() } }
-            .subscribe(
-                { _menuItems ->
-                    menuItemsSubject.onNext(_menuItems)
-                },
-                {
-
-                }
-            )
-    }
-
     @SuppressLint("CheckResult")
-    override fun getAllMenuItems(): Observable<List<MenuItem>> {
-
-        val inMemory = menuItemsSubject.toFlowable(BackpressureStrategy.LATEST)
-            .filter { it.isNotEmpty() }
-            .distinctUntilChanged()
-
-        val combo = Flowable.concat(fetchMenuItems().toFlowable(), inMemory).subscribeOn(Schedulers.io())
-
+    override fun getMenuItemsByDate(date: LocalDate): Observable<List<MenuItem>> {
         return menuItemsDao.getMenuItemCount()
             .take(1)
             .flatMap { _count ->
                 when {
-                    _count <= 0 -> combo
-                    else        ->  menuItemsDao.getLatestStoredDate()
-                        .take(1)
-                        .flatMap { _date ->
-                            when {
-                                _date < LocalDate.now() -> combo
-                                else                    -> inMemory
+                    _count <= 0 -> {
+                        when(networkWatcher.isConnectedToInternet()) {
+                            true  -> when(networkWatcher.isConnectedToInternet()) {
+                                true  -> fetchAndUpdateMenuItems().andThen(menuItemsDao.getMenuItemsByDate(date))
+                                false -> throw NoDataSourceException("Not connected to the internet")
+                            }
+                            false -> throw NoDataSourceException("Not connected to the internet")
+                        }
+                    }
+                    else        -> {
+                        when(isDataStale()) {
+                            true  -> when(networkWatcher.isConnectedToInternet()) {
+                                true  -> fetchAndUpdateMenuItems().andThen(menuItemsDao.getMenuItemsByDate(date))
+                                false -> throw NoDataSourceException("Not connected to the internet")
+                            }
+                            false -> {
+                                menuItemsDao.getMenuItemsByDate(date)
                             }
                         }
+                    }
                 }
             }
+            .filter { it.isNotEmpty() }
+            .map { _items ->
+                _items.map { it.toCoreLayer() }
+            }
+            .toObservable()
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun getDatesInMenu(): Observable<List<LocalDate>> {
+        return menuItemsDao.getDatesInMenu()
             .toObservable()
             .subscribeOn(Schedulers.io())
     }
 
     override fun rateMenuItemWithId(id: Id, rating: Rating): Completable {
         return Completable.fromAction {
-            menuItemsSubject.value?.modifyElement({ it.id == id }, { it.copy(rating = rating) })
             menuItemsDao.rateMenuItemWithId(id, rating)
         }.subscribeOn(Schedulers.io())
     }
 
     @SuppressLint("CheckResult")
-    private fun fetchMenuItems(): Single<List<MenuItem>> {
-        if(!networkWatcher.isConnectedToInternet()) {
-            return Single.error(NoDataSourceException("Not connected to the internet"))
-        }
+    private fun fetchAndUpdateMenuItems(): Completable {
+        Log.d("MenuRepositoryImpl", "fetch()")
         return menuService.getMeals()
             .map { _response ->
                 Log.d("MenuRepositoryImpl", "${_response.code()}: ${_response.errorBody()?.string()}")
@@ -124,10 +114,12 @@ class MenuRepositoryImpl(
                 menuItemsDao.deleteAllMenuItems()
                 menuItemsDao.insertMenuItems(_items)
             }
-            .map { _items ->
-                _items.map { it.toCoreLayer() }
-            }
+            .ignoreElement()
             .subscribeOn(Schedulers.io())
+    }
+
+    private fun isDataStale(): Boolean {
+        return menuItemsDao.getLatestStoredDate() < LocalDate.now()
     }
 
     private fun DataLayerMenuItem.toCoreLayer(): MenuItem {

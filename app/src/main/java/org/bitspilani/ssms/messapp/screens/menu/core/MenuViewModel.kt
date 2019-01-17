@@ -3,7 +3,9 @@ package org.bitspilani.ssms.messapp.screens.menu.core
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Id
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Meal
 import org.bitspilani.ssms.messapp.screens.menu.core.model.MenuItem
@@ -48,20 +50,7 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
         val date = LocalDate.ofEpochDay(id)
         pickedDate = date
 
-        d1.set(mRepo.getAllMenuItems()
-            .subscribe(
-                { _items ->
-                    val dates = _items.toViewLayerDates(pickedDate = date)
-                    val meals = _items.toViewLayerMeals(pickedDate = date)
-                    order.toMut().postValue(UiOrder.ShowWorking(dates, meals))
-                },
-                {
-                    order.toMut().postValue(when(it) {
-                        is NoLoggedUserException -> UiOrder.MoveToLogin
-                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
-                    })
-                }
-            ))
+        retrieveDataForDate(date)
     }
 
     fun onRateItemAction(id: Id, rating: Rating) {
@@ -89,12 +78,23 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
 
         order.toMut().value = UiOrder.ShowLoading
 
-        d1.set(mRepo.getAllMenuItems()
+        retrieveDataForDate(date)
+    }
+
+    private fun retrieveDataForDate(date: LocalDate) {
+        val combiner = BiFunction { t1: List<LocalDate>, t2: List<MenuItem> ->
+            Pair(t1, t2)
+        }
+
+        d1.set(Observable.combineLatest(mRepo.getDatesInMenu(), mRepo.getMenuItemsByDate(date), combiner)
+            .map { _pair ->
+                val dates = _pair.first.toViewLayerDates(pickedDate)
+                val meals = _pair.second.toViewLayerMeals()
+                UiOrder.ShowWorking(dates, meals)
+            }
             .subscribe(
-                { _items ->
-                    val dates = _items.toViewLayerDates(pickedDate = date)
-                    val meals = _items.toViewLayerMeals(pickedDate = date)
-                    order.toMut().postValue(UiOrder.ShowWorking(dates, meals))
+                { _order ->
+                    order.toMut().postValue(_order)
                 },
                 {
                     order.toMut().postValue(when(it) {
@@ -108,19 +108,19 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     }
 
 
-    private fun List<MenuItem>.toViewLayerDates(pickedDate: LocalDate): List<ViewLayerDate> {
+    private fun List<LocalDate>.toViewLayerDates(pickedDate: LocalDate): List<ViewLayerDate> {
 
         fun LocalDate.toViewLayer(isSelected: Boolean): ViewLayerDate {
             return ViewLayerDate(toEpochDay(), dayOfMonth.toString(), month.toString(), isSelected)
         }
 
-        return this.distinctBy { it.date }.map {
-            it.date.toViewLayer(it.date == pickedDate)
+        return this.map {
+            it.toViewLayer(it == pickedDate)
         }
     }
 
-    private fun List<MenuItem>.toViewLayerMeals(pickedDate: LocalDate): List<ViewLayerMeal> {
-        return this.filter { it.date == pickedDate }.groupBy { it.meal }.map {
+    private fun List<MenuItem>.toViewLayerMeals(): List<ViewLayerMeal> {
+        return this.groupBy { it.meal }.map {
             val name = when(it.key) {
                 Meal.BreakFast -> "Breakfast"
                 Meal.Lunch     -> "Lunch"
