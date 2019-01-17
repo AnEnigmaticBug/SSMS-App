@@ -15,16 +15,13 @@ import org.bitspilani.ssms.messapp.screens.menu.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerDate
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMeal
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMenuItem
-import org.bitspilani.ssms.messapp.util.NoDataSourceException
-import org.bitspilani.ssms.messapp.util.NoLoggedUserException
-import org.bitspilani.ssms.messapp.util.set
-import org.bitspilani.ssms.messapp.util.toMut
+import org.bitspilani.ssms.messapp.util.*
 import org.threeten.bp.LocalDate
 
 class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
 
     val order: LiveData<UiOrder> = MutableLiveData()
-    val toast: LiveData<String?> = MutableLiveData()
+    val toast: LiveData<String?> = SingleLiveEvent()
 
 
     // Holds the last date the user picked. Useful when retrying after an error.

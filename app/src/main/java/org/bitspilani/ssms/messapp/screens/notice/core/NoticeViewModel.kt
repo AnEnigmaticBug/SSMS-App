@@ -8,16 +8,13 @@ import org.bitspilani.ssms.messapp.screens.notice.core.model.Id
 import org.bitspilani.ssms.messapp.screens.notice.data.repo.NoticeRepository
 import org.bitspilani.ssms.messapp.screens.notice.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.notice.view.model.ViewLayerNotice
-import org.bitspilani.ssms.messapp.util.NoDataSourceException
-import org.bitspilani.ssms.messapp.util.NoLoggedUserException
-import org.bitspilani.ssms.messapp.util.set
-import org.bitspilani.ssms.messapp.util.toMut
+import org.bitspilani.ssms.messapp.util.*
 import org.threeten.bp.LocalDateTime
 
 class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
 
     val order: LiveData<UiOrder> = MutableLiveData()
-    val toast: LiveData<String?> = MutableLiveData()
+    val toast: LiveData<String?> = SingleLiveEvent()
 
 
     private val d1 = CompositeDisposable()

@@ -11,12 +11,13 @@ import org.bitspilani.ssms.messapp.screens.feedback.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.feedback.view.model.ViewLayerFeedback
 import org.bitspilani.ssms.messapp.util.NoConnectionException
 import org.bitspilani.ssms.messapp.util.NoLoggedUserException
+import org.bitspilani.ssms.messapp.util.SingleLiveEvent
 import org.bitspilani.ssms.messapp.util.toMut
 
 class FeedbackViewModel(private val fRepo: FeedbackRepository) : ViewModel() {
 
     val order: LiveData<UiOrder> = MutableLiveData()
-    val toast: LiveData<String?> = MutableLiveData()
+    val toast: LiveData<String?> = SingleLiveEvent()
 
 
     private val blankFeedback = ViewLayerFeedback("", setOf())

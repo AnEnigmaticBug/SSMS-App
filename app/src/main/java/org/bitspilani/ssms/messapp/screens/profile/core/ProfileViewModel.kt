@@ -8,15 +8,12 @@ import io.reactivex.disposables.CompositeDisposable
 import org.bitspilani.ssms.messapp.screens.profile.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.profile.view.model.ViewLayerUser
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
-import org.bitspilani.ssms.messapp.util.NoConnectionException
-import org.bitspilani.ssms.messapp.util.NoLoggedUserException
-import org.bitspilani.ssms.messapp.util.set
-import org.bitspilani.ssms.messapp.util.toMut
+import org.bitspilani.ssms.messapp.util.*
 
 class ProfileViewModel(private val uRepo: UserRepository) : ViewModel() {
 
     val order: LiveData<UiOrder> = MutableLiveData()
-    val toast: LiveData<String?> = MutableLiveData()
+    val toast: LiveData<String?> = SingleLiveEvent()
 
 
     private val d1 = CompositeDisposable()

@@ -8,12 +8,13 @@ import org.bitspilani.ssms.messapp.screens.login.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
 import org.bitspilani.ssms.messapp.util.InvalidCredentialsException
 import org.bitspilani.ssms.messapp.util.NoConnectionException
+import org.bitspilani.ssms.messapp.util.SingleLiveEvent
 import org.bitspilani.ssms.messapp.util.toMut
 
 class LoginViewModel(private val uRepo: UserRepository) : ViewModel() {
 
     val order: LiveData<UiOrder> = MutableLiveData()
-    val toast: LiveData<String?> = MutableLiveData()
+    val toast: LiveData<String?> = SingleLiveEvent()
 
 
     init {
