@@ -72,7 +72,13 @@
         android:id="@+id/grubListFragment"
         android:name="org.bitspilani.ssms.messapp.screens.grub.grublist.view.GrubListFragment"
         android:label="GrubListFragment"
-        tools:layout="@layout/fra_grub_list_working_state" />
+        tools:layout="@layout/fra_grub_list_working_state">
+        <action
+            android:id="@+id/action_grubListFragment_to_grubDetailsFragment"
+            app:destination="@id/grubDetailsFragment"
+            app:enterAnim="@anim/an_fade_in"
+            app:exitAnim="@anim/an_fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="org.bitspilani.ssms.messapp.screens.about.view.AboutFragment"
@@ -91,6 +97,11 @@
     <fragment
         android:id="@+id/techTeamFragment"
         android:name="org.bitspilani.ssms.messapp.screens.techteam.view.TechTeamFragment"
-        tools:layout="@layout/fra_tech_team"
-        android:label="TechTeamFragment" />
+        android:label="TechTeamFragment"
+        tools:layout="@layout/fra_tech_team" />
+    <fragment
+        android:id="@+id/grubDetailsFragment"
+        android:name="org.bitspilani.ssms.messapp.screens.grub.grubdetails.view.GrubDetailsFragment"
+        android:label="GrubDetailsFragment"
+        tools:layout="@layout/fra_grub_details_working_state" />
 </navigation>

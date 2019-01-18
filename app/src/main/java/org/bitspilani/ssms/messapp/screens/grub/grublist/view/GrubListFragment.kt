@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import kotlinx.android.synthetic.main.fra_grub_details_working_state.*
 import kotlinx.android.synthetic.main.fra_grub_list_working_state.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.grub.grublist.core.GrubListViewModel
@@ -62,7 +65,7 @@ class GrubListFragment : Fragment(), GrubDetailsAdapter.ClickListener {
     }
 
     override fun onGrubClicked(id: Id) {
-
+        rootPOV.findNavController().navigate(R.id.action_grubListFragment_to_grubDetailsFragment, bundleOf("ID" to id))
     }
 
     private fun showLoadingState() {

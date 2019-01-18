@@ -22,16 +22,17 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         navHostFRA.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             val currentItem = when(destination.id) {
-                R.id.grubListFragment -> 1
-                R.id.menuFragment     -> 2
-                R.id.noticeFragment   -> 3
-                R.id.moreFragment     -> 4
-                R.id.feedbackFragment -> 4
-                R.id.aboutFragment    -> 4
-                R.id.sickFoodFragment -> 4
-                R.id.contactFragment  -> 4
-                R.id.techTeamFragment -> 4
-                else                  -> 2
+                R.id.grubListFragment    -> 1
+                R.id.grubDetailsFragment -> 1
+                R.id.menuFragment        -> 2
+                R.id.noticeFragment      -> 3
+                R.id.moreFragment        -> 4
+                R.id.feedbackFragment    -> 4
+                R.id.aboutFragment       -> 4
+                R.id.sickFoodFragment    -> 4
+                R.id.contactFragment     -> 4
+                R.id.techTeamFragment    -> 4
+                else                     -> 2
             }
             if(bottomNavAHB.currentItem != currentItem) {
                 bottomNavAHB.setCurrentItem(currentItem, false)
