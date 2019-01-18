@@ -30,3 +30,11 @@ fun<T> List<T>.modifyElement(condition: (elem: T) -> Boolean, action: (elem: T) 
 fun JSONObject.toRequestBody(): RequestBody {
     return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), this.toString())
 }
+
+fun Int.makeTwoDigit(): String {
+    return when(this) {
+        in 0..9   -> "0$this"
+        in 10..99 -> this.toString()
+        else      -> throw IllegalArgumentException("Can't make $this into 2 digits")
+    }
+}
