@@ -23,7 +23,9 @@
     </style>
 
     <style name="TextButton">
-        <item name="android:background">@drawable/sh_rounded_rectangle_wht01_16dp</item>
+        <item name="android:background">@drawable/sl_rounded_rectangle_wht01_pnk01_16dp</item>
+        <item name="android:stateListAnimator">@animator/an_text_color_pnk01_wht01_on_press</item>
+        <item name="android:elevation">4dp</item>
         <item name="android:textColor">@color/pnk01</item>
         <item name="android:textSize">18sp</item>
         <item name="android:includeFontPadding">false</item>
@@ -35,9 +37,11 @@
 
     <style name="ActionButton">
         <item name="android:tint">@color/wht01</item>
+        <item name="android:padding">4dp</item>
     </style>
 
     <style name="DialogIconButton">
+        <item name="android:padding">4dp</item>
         <item name="android:tint">@color/pnk01</item>
     </style>
 

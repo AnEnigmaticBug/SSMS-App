@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pressed"
+        android:drawable="@drawable/sh_rounded_rectangle_pnk01_16dp"
+        android:state_pressed="true" />
+    <item
+        android:id="@+id/unPressed"
+        android:drawable="@drawable/sh_rounded_rectangle_wht01_16dp" />
+
+</animated-selector>
