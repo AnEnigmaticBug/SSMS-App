@@ -19,6 +19,9 @@ interface GrubBatchesDao {
     @Query("SELECT id FROM GrubBatches WHERE grubId = :grubId AND foodType = :foodType")
     fun getGrubBatchId(grubId: Id, foodType: FoodType): Long
 
+    @Query("SELECT ticketId FROM GrubBatches WHERE grubId = :grubId AND ticketId != 'null'")
+    fun getSignedGrubBatchId(grubId: Id): Long
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGrubBatches(grubBatches: List<DataLayerGrubBatch>)
 

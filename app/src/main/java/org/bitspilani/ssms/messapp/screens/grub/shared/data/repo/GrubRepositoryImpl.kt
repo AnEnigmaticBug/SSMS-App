@@ -1,42 +1,42 @@
 package org.bitspilani.ssms.messapp.screens.grub.shared.data.repo
 
+import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.*
+import org.bitspilani.ssms.messapp.screens.grub.shared.data.retrofit.GrubService
+import org.bitspilani.ssms.messapp.screens.grub.shared.data.retrofit.model.GrubMenuResponse
+import org.bitspilani.ssms.messapp.screens.grub.shared.data.retrofit.model.GrubResponse
+import org.bitspilani.ssms.messapp.screens.grub.shared.data.retrofit.model.TicketResponse
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.GrubBatchesDao
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.model.DataLayerGrubBatch
+import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
+import org.bitspilani.ssms.messapp.util.toRequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
-import java.util.concurrent.TimeUnit
 
-class GrubRepositoryImpl(private val grubBatchesDao: GrubBatchesDao) : GrubRepository {
+class GrubRepositoryImpl(
+    private val userRepository: UserRepository,
+    private val grubBatchesDao: GrubBatchesDao,
+    private val grubService: GrubService
+) : GrubRepository {
 
-    init {
-        Completable.fromAction {
-            grubBatchesDao.deleteAllGrubBatches()
-            val today = LocalDate.now()
-            val time1 = LocalTime.of(20, 30)
-            val time2 = LocalTime.of(21, 30)
-            grubBatchesDao.insertGrubBatches(listOf(
-                DataLayerGrubBatch(1, 1, "Dilli Darbar", "Capitol", FoodOption.VegAndNonVeg, today.plusDays(2), time1, time2, today.minusDays(4), today.minusDays(2), SigningStatus.Available, null, FoodType.Veg, setOf(), "VK Mess", 200, null),
-                DataLayerGrubBatch(2, 1, "Dilli Darbar", "Capitol", FoodOption.VegAndNonVeg, today.plusDays(2), time1, time2, today.minusDays(4), today.minusDays(2), SigningStatus.Available, null, FoodType.NonVeg, setOf(), "RP Mess", 250, null),
-                DataLayerGrubBatch(3, 2, "Abhiruchi", "Andhra Samiti", FoodOption.VegAndNonVeg, today.plusDays(4), time1, time2, today.minusDays(2), today.plusDays(0), SigningStatus.Available, Slot.Slot1, FoodType.Veg, setOf(), "VK Mess", 180, null),
-                DataLayerGrubBatch(4, 2, "Abhiruchi", "Andhra Samiti", FoodOption.VegAndNonVeg, today.plusDays(4), time1, time2, today.minusDays(2), today.plusDays(0), SigningStatus.Available, Slot.Slot1, FoodType.NonVeg, setOf(), "RP Mess", 200, null),
-                DataLayerGrubBatch(5, 3, "Lazzat", "Udgam", FoodOption.Veg, today.plusDays(3), time1, time2, today.minusDays(3), today.minusDays(1), SigningStatus.SignedForNonVeg, Slot.Slot2, FoodType.NonVeg, setOf(), "VK Mess", 160, null),
-                DataLayerGrubBatch(6, 4, "Aaswad", "Maharastra Mandal", FoodOption.VegAndNonVeg, today.plusDays(10), time1, time2, today.plusDays(4), today.plusDays(6), SigningStatus.SignedForVeg, null, FoodType.Veg, setOf(), "VK Mess", 220, null),
-                DataLayerGrubBatch(7, 4, "Aaswad", "Maharastra Mandal", FoodOption.VegAndNonVeg, today.plusDays(10), time1, time2, today.plusDays(4), today.plusDays(6), SigningStatus.SignedForVeg, null, FoodType.NonVeg, setOf(), "RP Mess", 300, null),
-                DataLayerGrubBatch(8, 5, "Tripti", "Maurya Vihar", FoodOption.NonVeg, today.plusDays(20), time1, time2, today.plusDays(14), today.plusDays(16), SigningStatus.NotAvailable, null, FoodType.Veg, setOf(), "VK Mess", 260, null)
-            ))
-        }.subscribeOn(Schedulers.io()).subscribe()
-    }
+    private var isDataFresh = false
 
     override fun forceDataRefresh(): Completable {
-        return Completable.complete().delay(3, TimeUnit.SECONDS)
+        return fetchAndUpdateGrubs()
+            .doOnComplete { isDataFresh = true }
     }
 
     override fun getAllGrubDetails(): Observable<List<GrubDetails>> {
-        return grubBatchesDao.getAllGrubDetails()
+        if(isDataFresh) {
+            return grubBatchesDao.getAllGrubDetails()
+                .toObservable()
+        }
+        return forceDataRefresh().andThen(grubBatchesDao.getAllGrubDetails())
             .toObservable()
     }
 
@@ -48,18 +48,131 @@ class GrubRepositoryImpl(private val grubBatchesDao: GrubBatchesDao) : GrubRepos
     }
 
     override fun signUpGrubWithId(id: Id, type: FoodType): Completable {
-        return Completable.fromAction {
-            val batchId = grubBatchesDao.getGrubBatchId(id, type)
-        }
+        return userRepository.getUser()
+            .flatMapCompletable { _user ->
+                val body = JSONObject().apply {
+                    put("ids", JSONArray(listOf(grubBatchesDao.getGrubBatchId(id, type))))
+                }.toRequestBody()
+                grubService.signUpGrub(_user.jwt, body)
+            }
             .subscribeOn(Schedulers.io())
-            .delay(2, TimeUnit.SECONDS)
     }
 
     override fun cancelGrubWithId(id: Id): Completable {
-        return Completable.fromAction {
-        }
+        return userRepository.getUser()
+            .flatMapCompletable { _user ->
+                val body = JSONObject().apply {
+                    put("id", grubBatchesDao.getSignedGrubBatchId(id))
+                }.toRequestBody()
+                grubService.cancelGrub(_user.jwt, body)
+            }
+    }
+
+    private fun fetchAndUpdateGrubs(): Completable {
+        return userRepository.getUser()
+            .flatMapSingle { _user ->
+                grubService.getGrubs()
+                    .map { _response ->
+                        when(_response.code()) {
+                            200  -> _response.body()!!
+                            else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
+                        }
+                    }
+                    .map { _grubs ->
+                        _grubs.map { _grub ->
+
+                            _grub.menus.map { _menu ->
+                                DataLayerGrubBatch(
+                                    _menu.id,
+                                    _grub.id,
+                                    _grub.name,
+                                    _grub.organizer,
+                                    _grub.getFoodOption(),
+                                    LocalDate.parse(_grub.date),
+                                    LocalTime.parse(_grub.slot1Time),
+                                    LocalTime.parse(_grub.slot2Time),
+                                    LocalDate.parse(_grub.signUpDeadline),
+                                    LocalDate.parse(_grub.cancelDeadline),
+                                    _grub.getSigningStatus(),
+                                    null,
+                                    _menu.getFoodType(),
+                                    _menu.items.map { it.name }.toSet(),
+                                    _menu.venue,
+                                    _menu.price.toFloat().toInt(),
+                                    null
+                                )
+                            }
+                        }
+                    }
+                    .map { it.flatten() }
+                    .flatMap { _grubBatches ->
+                        grubService.getTickets(_user.jwt)
+                            .map { _response ->
+                                Log.d("GrubRepositoryImpl", "${_response.code()}")
+
+                                when (_response.code()) {
+                                    200 -> _response.body()!!
+                                    else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
+                                }
+                            }
+                            .map { _tickets ->
+                                _grubBatches.updateWithTicketInfo(_tickets)
+                            }
+                    }
+            }
+            .doOnSuccess { _grubBatches ->
+                grubBatchesDao.deleteAllGrubBatches()
+                grubBatchesDao.insertGrubBatches(_grubBatches)
+            }
+            .ignoreElement()
             .subscribeOn(Schedulers.io())
-            .delay(2, TimeUnit.SECONDS)
+    }
+
+
+    private fun List<DataLayerGrubBatch>.updateWithTicketInfo(tickets: List<TicketResponse>): List<DataLayerGrubBatch> {
+        return this.map { _grubBatch ->
+            when (_grubBatch.id) {
+                in tickets.map { it.id } -> {
+                    val ticket = tickets.find { it.id == _grubBatch.id }!!
+                    _grubBatch.copy(slot = ticket.slot.toSlot(), ticketId = ticket.id)
+                }
+                else -> _grubBatch
+            }
+        }
+    }
+
+    private fun GrubResponse.getSigningStatus(): SigningStatus {
+        return when(status) {
+            "Active" -> SigningStatus.Available
+            else     -> SigningStatus.NotAvailable
+        }
+    }
+
+    private fun GrubMenuResponse.getFoodType(): FoodType {
+        return when(category) {
+            "Veg"     -> FoodType.Veg
+            "Non-veg" -> FoodType.NonVeg
+            else      -> throw java.lang.IllegalArgumentException("Grub($id) without veg or non-veg menus")
+        }
+    }
+
+    private fun GrubResponse.getFoodOption(): FoodOption {
+        val hasVegOption = this.menus.any { it.category == "Veg" }
+        val hasNonVegOption = this.menus.any { it.category == "Non-veg" }
+        return when {
+             hasVegOption && !hasNonVegOption -> FoodOption.Veg
+            !hasVegOption &&  hasNonVegOption -> FoodOption.NonVeg
+             hasVegOption &&  hasNonVegOption -> FoodOption.VegAndNonVeg
+            else                              -> throw IllegalArgumentException("Grub($id) without veg or non-veg menus")
+        }
+    }
+
+    private fun String.toSlot(): Slot {
+        return when(this) {
+            "A"  -> Slot.Slot1
+            "B"  -> Slot.Slot2
+            else -> throw IllegalArgumentException("Unknown slot: $this")
+        }
     }
 
     private fun DataLayerGrubBatch.toCoreLayer(): GrubBatch {
