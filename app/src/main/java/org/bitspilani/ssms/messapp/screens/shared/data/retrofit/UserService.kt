@@ -16,5 +16,5 @@ interface UserService {
     fun login(@Body body: RequestBody): Single<Response<UserResponse>>
 
     @GET("api/refresh/qr")
-    fun refreshQrCode(@Header("JWT") jwt: String): Single<Response<QrResponse>>
+    fun refreshQrCode(@Header("Authorization") jwt: String): Single<Response<QrResponse>>
 }

@@ -14,11 +14,11 @@ interface GrubService {
     fun getGrubs(): Single<Response<List<GrubResponse>>>
 
     @GET("api/grubs/user/view")
-    fun getTickets(@Header("JWT") jwt: String): Single<Response<List<TicketResponse>>>
+    fun getTickets(@Header("Authorization") jwt: String): Single<Response<List<TicketResponse>>>
 
     @POST("api/grubs/user/view/")
-    fun signUpGrub(@Header("JWT") jwt: String, @Body body: RequestBody): Completable
+    fun signUpGrub(@Header("Authorization") jwt: String, @Body body: RequestBody): Completable
 
     @HTTP(method = "DELETE", path = "api/grubs/user/view/", hasBody = true)
-    fun cancelGrub(@Header("JWT") jwt: String, @Body body: RequestBody): Completable
+    fun cancelGrub(@Header("Authorization") jwt: String, @Body body: RequestBody): Completable
 }

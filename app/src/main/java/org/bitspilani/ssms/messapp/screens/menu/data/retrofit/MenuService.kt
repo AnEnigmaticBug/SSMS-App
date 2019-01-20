@@ -16,5 +16,5 @@ interface MenuService {
     fun getMeals(): Single<Response<List<MealResponse>>>
 
     @POST("api/mess/menu")
-    fun rateItems(@Header("JWT") jwt: String, @Body body: RequestBody): Completable
+    fun rateItems(@Header("Authorization") jwt: String, @Body body: RequestBody): Completable
 }

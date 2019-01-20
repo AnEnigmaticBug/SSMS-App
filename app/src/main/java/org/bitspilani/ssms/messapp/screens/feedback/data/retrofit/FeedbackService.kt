@@ -9,5 +9,5 @@ import retrofit2.http.POST
 interface FeedbackService {
 
     @POST("api/feedback/")
-    fun sendFeedback(@Header("JWT") jwt: String, @Body body: RequestBody): Completable
+    fun sendFeedback(@Header("Authorization") jwt: String, @Body body: RequestBody): Completable
 }
