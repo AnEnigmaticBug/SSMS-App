@@ -15,9 +15,6 @@ import org.bitspilani.ssms.messapp.util.NoConnectionException
 import org.bitspilani.ssms.messapp.util.NoLoggedUserException
 import org.bitspilani.ssms.messapp.util.toRequestBody
 import org.json.JSONObject
-import retrofit2.Response
-import java.util.*
-import java.util.function.BiConsumer
 
 class UserRepositoryImpl(
     private val prefs: SharedPreferences,
@@ -67,7 +64,7 @@ class UserRepositoryImpl(
         val room = prefs.getString(Keys.room, null)
         val profilePicUrl = prefs.getString(Keys.profilePicUrl, null)
         val qrCode = prefs.getString(Keys.qrCode, null)
-        val jwt = prefs.getString(Keys.room, null)
+        val jwt = prefs.getString(Keys.jwt, null)
 
         if(listOf(id, name, room, profilePicUrl, qrCode, jwt).contains(null)) {
             return Maybe.empty()
