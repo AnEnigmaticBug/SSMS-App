@@ -48,7 +48,7 @@ class AppModule(private val application: Application) {
     @Provides @Singleton
     fun providesRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://carbocation.pythonanywhere.com/")
+            .baseUrl("http://142.93.213.45/")
             .client(OkHttpClient().newBuilder().addInterceptor(BaseInterceptor()).build())
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
