@@ -1,6 +1,5 @@
 package org.bitspilani.ssms.messapp.screens.grub.shared.core.model
 
-import androidx.room.ColumnInfo
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
@@ -14,15 +13,15 @@ typealias Id = Long
  * @property slot  is the slot allotted to the user. It is null if a slot hasn't been allotted.
  * */
 data class GrubDetails(
-    @ColumnInfo(name = "grubId") val id: Id,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "organizer") val organizer: String,
-    @ColumnInfo(name = "foodOption") val foodOption: FoodOption,
-    @ColumnInfo(name = "date") val date: LocalDate,
-    @ColumnInfo(name = "slot1Time") val slot1Time: LocalTime,
-    @ColumnInfo(name = "slot2Time") val slot2Time: LocalTime,
-    @ColumnInfo(name = "signUpDeadline") val signUpDeadline: LocalDate,
-    @ColumnInfo(name = "cancelDeadline") val cancelDeadline: LocalDate,
-    @ColumnInfo(name = "signingStatus") val signingStatus: SigningStatus,
-    @ColumnInfo(name = "slot") val slot: Slot?
+    val id: Id,
+    val name: String,
+    val organizer: String,
+    val foodOption: FoodOption,
+    val date: LocalDate,
+    val slot1Time: LocalTime,
+    val slot2Time: LocalTime,
+    val signUpDeadline: LocalDate,
+    val cancelDeadline: LocalDate,
+    val signingStatus: SigningStatus,
+    val slot: Slot?
 )
