@@ -10,6 +10,7 @@ import org.bitspilani.ssms.messapp.screens.contact.data.room.ContactsDao
 import org.bitspilani.ssms.messapp.screens.contact.data.room.model.DataLayerContact
 import org.bitspilani.ssms.messapp.util.NetworkWatcher
 import org.bitspilani.ssms.messapp.util.NoDataSourceException
+import org.bitspilani.ssms.messapp.util.getBody
 
 class ContactRepositoryImpl(
     private val contactsDao: ContactsDao,
@@ -25,7 +26,7 @@ class ContactRepositoryImpl(
                     _count <= 0 -> {
                         when(networkWatcher.isConnectedToInternet()) {
                             true  -> Flowable.concat(fetchAndUpdateContacts().toFlowable(), contactsDao.getAllContacts())
-                            false -> throw NoDataSourceException("Not connected to the internet")
+                            false -> throw NoDataSourceException()
                         }
                     }
                     else        -> Flowable.merge(fetchAndUpdateContacts().toFlowable(), contactsDao.getAllContacts())
@@ -41,10 +42,7 @@ class ContactRepositoryImpl(
     private fun fetchAndUpdateContacts(): Single<List<DataLayerContact>> {
         return contactService.getAllContacts()
             .map { _response ->
-                when(_response.code()) {
-                    200  -> _response.body()!!
-                    else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
-                }
+                _response.getBody()
             }
             .map { _contacts ->
                 _contacts.map { DataLayerContact(it.name, it.post, it.picUrl, it.phone) }

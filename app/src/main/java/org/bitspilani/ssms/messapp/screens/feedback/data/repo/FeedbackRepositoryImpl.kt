@@ -20,7 +20,7 @@ class FeedbackRepositoryImpl(
 
     override fun giveFeedback(feedback: Feedback): Completable {
         if(!networkWatcher.isConnectedToInternet()) {
-            return Completable.error(NoConnectionException("Not connected to the internet"))
+            return Completable.error(NoConnectionException())
         }
         return userRepository.getUser()
             .toSingle()

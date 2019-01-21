@@ -13,6 +13,7 @@ import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.model.DataLayer
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.model.DataLayerGrubBatch
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.room.model.DataLayerTicket
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
+import org.bitspilani.ssms.messapp.util.getBody
 import org.bitspilani.ssms.messapp.util.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -93,10 +94,7 @@ class GrubRepositoryImpl(
             .flatMapCompletable { _user ->
                 grubService.getGrubs()
                     .map { _response ->
-                        when(_response.code()) {
-                            200  -> _response.body()!!
-                            else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
-                        }
+                        _response.getBody()
                     }
                     .map { _grubs ->
                         Pair(_grubs.extractGrubs(), _grubs.extractGrubBatches())
@@ -117,10 +115,7 @@ class GrubRepositoryImpl(
     private fun fetchAndUpdateTickets(jwt: String): Completable {
         return grubService.getTickets(jwt)
             .map { _response ->
-                when (_response.code()) {
-                    200 -> _response.body()!!
-                    else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
-                }
+                _response.getBody()
             }
             .map { _tickets ->
                 _tickets.map { _ticket ->

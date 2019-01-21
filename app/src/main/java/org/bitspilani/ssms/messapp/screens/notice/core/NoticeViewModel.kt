@@ -37,7 +37,7 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
 
                 },
                 {
-                    toast.toMut().postValue("An error occurred")
+                    toast.toMut().postValue(it.getMessage())
                 }
             ))
     }
@@ -49,7 +49,7 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
 
                 },
                 {
-                    toast.toMut().postValue("An error occurred")
+                    toast.toMut().postValue(it.getMessage())
                 }
             ))
     }
@@ -73,11 +73,7 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
                     }))
                 },
                 {
-                    order.toMut().postValue(when(it) {
-                        is NoDataSourceException -> UiOrder.ShowFailure("Couldn't connect to server")
-                        is NoLoggedUserException -> UiOrder.MoveToLogin
-                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
-                    })
+                    order.toMut().postValue(UiOrder.ShowFailure(it.getMessage()))
                 }
             ))
     }

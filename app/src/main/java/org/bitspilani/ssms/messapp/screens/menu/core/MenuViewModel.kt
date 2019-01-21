@@ -64,7 +64,7 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
 
                 },
                 {
-                    toast.toMut().postValue("An error occurred")
+                    toast.toMut().postValue(it.getMessage())
                 }
             ))
     }
@@ -94,11 +94,7 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
                     order.toMut().postValue(_order)
                 },
                 {
-                    order.toMut().postValue(when(it) {
-                        is NoDataSourceException -> UiOrder.ShowFailure("Couldn't connect to server")
-                        is NoLoggedUserException -> UiOrder.MoveToLogin
-                        else                     -> UiOrder.ShowFailure("Something went wrong :(")
-                    })
+                    order.toMut().postValue(UiOrder.ShowFailure(it.getMessage()))
 
                 }
             ))

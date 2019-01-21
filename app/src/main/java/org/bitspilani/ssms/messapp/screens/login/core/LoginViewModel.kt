@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.bitspilani.ssms.messapp.screens.login.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
-import org.bitspilani.ssms.messapp.util.InvalidCredentialsException
-import org.bitspilani.ssms.messapp.util.NoConnectionException
-import org.bitspilani.ssms.messapp.util.SingleLiveEvent
-import org.bitspilani.ssms.messapp.util.toMut
+import org.bitspilani.ssms.messapp.util.*
 
 class LoginViewModel(private val uRepo: UserRepository) : ViewModel() {
 
@@ -33,12 +30,7 @@ class LoginViewModel(private val uRepo: UserRepository) : ViewModel() {
                 },
                 {
                     order.toMut().postValue(UiOrder.ShowWorking)
-                    val message = when(it) {
-                        is NoConnectionException       -> "Device isn't connected to the internet"
-                        is InvalidCredentialsException -> "Invalid sign-in credentials. Try again"
-                        else                           -> "Couldn't sign-in right now.  Try again"
-                    }
-                    toast.toMut().postValue(message)
+                    toast.toMut().postValue(it.getMessage())
                 }
             )
     }
@@ -52,7 +44,7 @@ class LoginViewModel(private val uRepo: UserRepository) : ViewModel() {
                     order.toMut().postValue(UiOrder.ShowWorking)
                 },
                 {
-                    toast.toMut().postValue("A serious error occured. Please restart the app")
+                    toast.toMut().postValue(it.getMessage())
                 }
             )
     }

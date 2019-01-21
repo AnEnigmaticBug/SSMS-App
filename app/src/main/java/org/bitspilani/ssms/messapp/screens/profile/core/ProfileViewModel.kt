@@ -56,10 +56,10 @@ class ProfileViewModel(private val uRepo: UserRepository) : ViewModel() {
                     when(it) {
                         is NoConnectionException -> {
                             updateUser()
-                            toast.toMut().postValue("No internet connection")
+                            toast.toMut().postValue(it.getMessage())
                         }
                         is NoLoggedUserException -> order.toMut().postValue(UiOrder.MoveToLogin)
-                        else                     -> order.toMut().postValue(UiOrder.ShowFailure("Something went wrong :("))
+                        else                     -> order.toMut().postValue(UiOrder.ShowFailure(it.getMessage()))
                     }
                 }
             ))
@@ -77,7 +77,7 @@ class ProfileViewModel(private val uRepo: UserRepository) : ViewModel() {
                     )
                 },
                 {
-                    order.toMut().postValue(UiOrder.ShowFailure("Something went wrong :("))
+                    order.toMut().postValue(UiOrder.ShowFailure(it.getMessage()))
                 },
                 {
                     order.toMut().postValue(UiOrder.MoveToLogin)

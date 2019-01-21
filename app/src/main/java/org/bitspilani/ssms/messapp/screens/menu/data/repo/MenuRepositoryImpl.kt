@@ -13,6 +13,7 @@ import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsDao
 import org.bitspilani.ssms.messapp.screens.menu.data.room.model.DataLayerMenuItem
 import org.bitspilani.ssms.messapp.util.NetworkWatcher
 import org.bitspilani.ssms.messapp.util.NoDataSourceException
+import org.bitspilani.ssms.messapp.util.getBody
 import org.threeten.bp.LocalDate
 
 class MenuRepositoryImpl(
@@ -29,18 +30,15 @@ class MenuRepositoryImpl(
                 when {
                     _count <= 0 -> {
                         when(networkWatcher.isConnectedToInternet()) {
-                            true  -> when(networkWatcher.isConnectedToInternet()) {
-                                true  -> fetchAndUpdateMenuItems().andThen(menuItemsDao.getMenuItemsByDate(date))
-                                false -> throw NoDataSourceException("Not connected to the internet")
-                            }
-                            false -> throw NoDataSourceException("Not connected to the internet")
+                            true  -> fetchAndUpdateMenuItems().andThen(menuItemsDao.getMenuItemsByDate(date))
+                            false -> throw NoDataSourceException()
                         }
                     }
                     else        -> {
                         when(isDataStale()) {
                             true  -> when(networkWatcher.isConnectedToInternet()) {
                                 true  -> fetchAndUpdateMenuItems().andThen(menuItemsDao.getMenuItemsByDate(date))
-                                false -> throw NoDataSourceException("Not connected to the internet")
+                                false -> throw NoDataSourceException()
                             }
                             false -> {
                                 menuItemsDao.getMenuItemsByDate(date)
@@ -74,11 +72,7 @@ class MenuRepositoryImpl(
         Log.d("MenuRepositoryImpl", "fetch()")
         return menuService.getMeals()
             .map { _response ->
-                Log.d("MenuRepositoryImpl", "${_response.code()}: ${_response.errorBody()?.string()}")
-                when(_response.code()) {
-                    200  -> _response.body()!!
-                    else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
-                }
+                _response.getBody()
             }
             .map { _meals ->
                 _meals.groupBy { it.date }.map { it.value }

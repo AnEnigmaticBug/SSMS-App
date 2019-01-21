@@ -12,6 +12,7 @@ import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.GrubDetails
 import org.bitspilani.ssms.messapp.screens.grub.shared.core.model.SigningStatus
 import org.bitspilani.ssms.messapp.screens.grub.shared.data.repo.GrubRepository
 import org.bitspilani.ssms.messapp.util.NoLoggedUserException
+import org.bitspilani.ssms.messapp.util.getMessage
 import org.bitspilani.ssms.messapp.util.set
 import org.bitspilani.ssms.messapp.util.toMut
 
@@ -59,10 +60,10 @@ class GrubListViewModel(private val gRepo: GrubRepository) : ViewModel() {
                     order.toMut().postValue(UiOrder.ShowWorking(_grubs, viewOnlySigned))
                 },
                 {
-                    if(it is NoLoggedUserException) {
-                        order.toMut().postValue(UiOrder.MoveToLogin)
-                    }
-                    order.toMut().postValue(UiOrder.ShowFailure("Something went wrong"))
+                    order.toMut().postValue(when(it) {
+                        is NoLoggedUserException -> UiOrder.MoveToLogin
+                        else                     -> UiOrder.ShowFailure(it.getMessage())
+                    })
                 }
             ))
     }

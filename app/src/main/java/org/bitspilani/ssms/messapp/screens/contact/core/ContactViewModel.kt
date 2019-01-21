@@ -9,6 +9,7 @@ import org.bitspilani.ssms.messapp.screens.contact.data.repo.ContactRepository
 import org.bitspilani.ssms.messapp.screens.contact.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.contact.view.model.ViewLayerContact
 import org.bitspilani.ssms.messapp.util.NoDataSourceException
+import org.bitspilani.ssms.messapp.util.getMessage
 import org.bitspilani.ssms.messapp.util.set
 import org.bitspilani.ssms.messapp.util.toMut
 
@@ -40,11 +41,7 @@ class ContactViewModel(private val cRepo: ContactRepository) : ViewModel() {
                     order.toMut().postValue(_order)
                 },
                 {
-                    val message = when(it) {
-                        is NoDataSourceException -> "Couldn't connect to server"
-                        else                     -> "Something went wrong :("
-                    }
-                    order.toMut().postValue(UiOrder.ShowFailure(message))
+                    order.toMut().postValue(UiOrder.ShowFailure(it.getMessage()))
                 }
             ))
     }

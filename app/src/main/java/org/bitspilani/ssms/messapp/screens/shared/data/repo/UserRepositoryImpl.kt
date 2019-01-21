@@ -1,7 +1,6 @@
 package org.bitspilani.ssms.messapp.screens.shared.data.repo
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.core.content.edit
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -10,10 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import org.bitspilani.ssms.messapp.screens.shared.core.model.User
 import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.UserService
 import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.model.UserResponse
-import org.bitspilani.ssms.messapp.util.NetworkWatcher
-import org.bitspilani.ssms.messapp.util.NoConnectionException
-import org.bitspilani.ssms.messapp.util.NoLoggedUserException
-import org.bitspilani.ssms.messapp.util.toRequestBody
+import org.bitspilani.ssms.messapp.util.*
 import org.json.JSONObject
 
 class UserRepositoryImpl(
@@ -39,17 +35,13 @@ class UserRepositoryImpl(
         }
 
         if(!networkWatcher.isConnectedToInternet()) {
-            return Completable.error(NoConnectionException("Not connected to the internet"))
+            return Completable.error(NoConnectionException())
         }
 
         val body = JSONObject().also { it.put("id_token", idToken) }.toRequestBody()
         return userService.login(body)
             .map { _response ->
-                Log.d("UserRepositoryImpl", "${_response.code()}: ${_response.errorBody()?.string()}")
-                when(_response.code()) {
-                    200  -> _response.body()!!.toUser()
-                    else -> throw Exception("${_response.code()}")
-                }
+                _response.getBody().toUser()
             }
             .doOnSuccess { _user ->
                 setUser(_user).subscribe()
@@ -88,19 +80,15 @@ class UserRepositoryImpl(
 
     override fun refreshQrCode(): Completable {
         if(!networkWatcher.isConnectedToInternet()) {
-            return Completable.error(NoConnectionException("Not connected to the internet"))
+            return Completable.error(NoConnectionException())
         }
         return getUser()
-            .switchIfEmpty(Single.error(NoLoggedUserException("User isn't logged in")))
+            .switchIfEmpty(Single.error(NoLoggedUserException()))
             .flatMap { _user ->
                 userService.refreshQrCode(_user.jwt)
             }
             .map { _response ->
-                Log.d("UserRepositoryImpl", "${_response.code()}: ${_response.errorBody()?.string()}")
-                when(_response.code()) {
-                    200  -> _response.body()!!.qrCode
-                    else -> throw Exception("${_response.code()}")
-                }
+                _response.getBody().qrCode
             }
             .doOnSuccess { _qrCode ->
                 prefs.edit(commit = true) {

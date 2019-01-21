@@ -16,6 +16,7 @@ import org.bitspilani.ssms.messapp.screens.notice.data.room.NoticesDao
 import org.bitspilani.ssms.messapp.screens.notice.data.room.model.DataLayerNotice
 import org.bitspilani.ssms.messapp.util.NetworkWatcher
 import org.bitspilani.ssms.messapp.util.NoDataSourceException
+import org.bitspilani.ssms.messapp.util.getBody
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -35,7 +36,7 @@ class NoticeRepositoryImpl(
                 when {
                     _count <= 0 -> {
                         when(networkWatcher.isConnectedToInternet()) {
-                            false -> throw NoDataSourceException("Not connected to the internet")
+                            false -> throw NoDataSourceException()
                             true  -> Flowable.concat(fetchAndInsertNotices().toFlowable(), noticesDao.getAllNotices())
                         }
                     }
@@ -80,10 +81,7 @@ class NoticeRepositoryImpl(
     private fun fetchAndInsertNotices(): Single<List<DataLayerNotice>> {
         return noticeService.getNotices()
             .map { _response ->
-                when(_response.code()) {
-                    200  -> _response.body()!!
-                    else -> throw Exception("${_response.code()}: ${_response.errorBody()?.string()}")
-                }
+                _response.getBody()
             }
             .map { _notices ->
                 val deletedIds = prefs.getStringSet("DELETED_IDS", setOf())!!.map { it.toLong() }

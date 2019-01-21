@@ -3,19 +3,29 @@ package org.bitspilani.ssms.messapp.util
 /**
  * Thrown when the cache is empty and the remote data source can't be reached.
  * */
-class NoDataSourceException(message: String) : Exception(message)
+class NoDataSourceException : Exception()
 
 /**
  * Thrown when the user's details can't be retrieved from the cache.
  * */
-class NoLoggedUserException(message: String) : Exception(message)
+class NoLoggedUserException : Exception()
 
 /**
  * Thrown when the device doesn't have a connection to the internet.
  * */
-class NoConnectionException(message: String) : Exception(message)
+class NoConnectionException : Exception()
 
 /**
- * Thrown when the user can't be logged in with his/her credentials.
+ * Thrown when  the backend-server  responds with a 5XX status code.
  * */
-class InvalidCredentialsException(message: String) : Exception(message)
+class ErrorCode5XXException : Exception()
+
+/**
+ * Thrown when  the backend-server  responds with a 4XX status code.
+ * */
+class ErrorCode4XXException(message: String) : Exception(message)
+
+/**
+ * Thrown when the app  should be restarted to avoid inconsistent information.
+ * */
+class UnknownStateException : Exception()

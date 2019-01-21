@@ -46,8 +46,10 @@ class GrubDetailsViewModel(private val id: Id, private val gRepo: GrubRepository
                 {
                     when(it) {
                         is NoLoggedUserException -> order.toMut().postValue(UiOrder.MoveToLogin)
-                        is NoDataSourceException -> order.toMut().postValue(UiOrder.ShowFailure("Not connected to internet"))
-                        else                     -> toast.toMut().postValue("Something went wrong. Please restart the app..")
+                        else                     -> {
+                            retrieveData()
+                            toast.toMut().postValue(it.getMessage())
+                        }
                     }
                 }
             )
@@ -65,8 +67,7 @@ class GrubDetailsViewModel(private val id: Id, private val gRepo: GrubRepository
                 {
                     when(it) {
                         is NoLoggedUserException -> order.toMut().postValue(UiOrder.MoveToLogin)
-                        is NoDataSourceException -> order.toMut().postValue(UiOrder.ShowFailure("Not connected to internet"))
-                        else                     -> toast.toMut().postValue("Something went wrong. Please restart the app..")
+                        else                     -> toast.toMut().postValue(it.getMessage())
                     }
                 }
             )
@@ -95,7 +96,7 @@ class GrubDetailsViewModel(private val id: Id, private val gRepo: GrubRepository
                 {
                     when(it) {
                         is NoLoggedUserException -> order.toMut().postValue(UiOrder.MoveToLogin)
-                        else                     -> order.toMut().postValue(UiOrder.ShowFailure("Something went wrong"))
+                        else                     -> order.toMut().postValue(UiOrder.ShowFailure(it.getMessage()))
                     }
                 }
             ))
