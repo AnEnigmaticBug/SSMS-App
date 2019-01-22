@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Meal
 import org.bitspilani.ssms.messapp.screens.menu.core.model.Rating
 
-class MenuItemsTypeConverters {
+class MenusTypeConverters {
 
     @TypeConverter
     fun MealToString(ml: Meal): String = ml.toString()

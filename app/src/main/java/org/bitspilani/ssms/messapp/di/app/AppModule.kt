@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient
 import org.bitspilani.ssms.messapp.screens.menu.data.repo.MenuRepository
 import org.bitspilani.ssms.messapp.screens.menu.data.repo.MenuRepositoryImpl
 import org.bitspilani.ssms.messapp.screens.menu.data.retrofit.MenuService
-import org.bitspilani.ssms.messapp.screens.menu.data.room.MenuItemsDao
+import org.bitspilani.ssms.messapp.screens.menu.data.room.MenusDao
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepository
 import org.bitspilani.ssms.messapp.screens.shared.data.repo.UserRepositoryImpl
 import org.bitspilani.ssms.messapp.screens.shared.data.retrofit.UserService
@@ -27,10 +27,10 @@ import javax.inject.Singleton
 class AppModule(private val application: Application) {
 
     @Provides @Singleton
-    fun providesMenuRepository(menuItemsDao: MenuItemsDao, networkWatcher: NetworkWatcher, menuService: MenuService): MenuRepository = MenuRepositoryImpl(menuItemsDao, networkWatcher, menuService)
+    fun providesMenuRepository(userRepository: UserRepository, menusDao: MenusDao, networkWatcher: NetworkWatcher, menuService: MenuService): MenuRepository = MenuRepositoryImpl(userRepository, menusDao, networkWatcher, menuService)
 
     @Provides @Singleton
-    fun providesMenuItemsDao(appDatabase: AppDatabase): MenuItemsDao = appDatabase.menuItemsDao()
+    fun providesMenusDao(appDatabase: AppDatabase): MenusDao = appDatabase.menusDao()
 
     @Provides @Singleton
     fun providesMenuService(retrofit: Retrofit): MenuService = retrofit.create(MenuService::class.java)
