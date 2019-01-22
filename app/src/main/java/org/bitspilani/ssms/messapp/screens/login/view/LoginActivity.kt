@@ -56,6 +56,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         })
+
+        viewModel.toast.observe(this, Observer {
+            if(it != null) {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
