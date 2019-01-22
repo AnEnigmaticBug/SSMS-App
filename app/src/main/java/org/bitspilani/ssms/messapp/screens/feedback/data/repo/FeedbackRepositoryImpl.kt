@@ -1,5 +1,6 @@
 package org.bitspilani.ssms.messapp.screens.feedback.data.repo
 
+import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import org.bitspilani.ssms.messapp.screens.feedback.core.model.Feedback
@@ -27,8 +28,9 @@ class FeedbackRepositoryImpl(
             .flatMapCompletable { _user ->
                 val body = JSONObject().apply {
                     put("body", feedback.content)
-                    put("tags", JSONArray(feedback.tags))
+                    put("tags", JSONArray(feedback.tags.map { it.toString() }.toList()))
                 }
+                Log.d("FeedbackRepositoryImpl", body.toString(4))
                 feedbackService.sendFeedback(_user.jwt, body.toRequestBody())
             }
             .subscribeOn(Schedulers.io())
