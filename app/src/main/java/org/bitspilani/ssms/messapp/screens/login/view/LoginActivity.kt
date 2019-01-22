@@ -52,6 +52,7 @@ class LoginActivity : AppCompatActivity() {
                 is UiOrder.ShowLoading   -> showLoadingState()
                 is UiOrder.MoveToMainApp -> {
                     startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     finish()
                 }
             }

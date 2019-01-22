@@ -6,9 +6,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/sh_rounded_rectangle_wht01_16dp"
-    android:maxHeight="480dp"
-    android:minWidth="300dp"
-    android:minHeight="300dp">
+    android:maxWidth="300dp"
+    android:maxHeight="640dp"
+    android:minWidth="280dp"
+    android:minHeight="360dp">
 
     <TextView
         android:id="@+id/headingLBL"
@@ -30,14 +31,14 @@
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/closeBTN"
-        app:layout_constraintEnd_toEndOf="@+id/headingLBL"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/headingLBL"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingLBL">
 
         <TextView

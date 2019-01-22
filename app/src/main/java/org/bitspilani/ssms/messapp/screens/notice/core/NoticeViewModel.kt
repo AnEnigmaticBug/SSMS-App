@@ -85,9 +85,9 @@ class NoticeViewModel(private val nRepo: NoticeRepository) : ViewModel() {
     }
 
     private fun LocalDateTime.prettyTime(): String {
-        val hour = if(this.hour < 12) { this.hour } else { this.hour - 12 }
-        val ampm = if(this.hour < 12) { "AM" } else { "PM" }
-        return "$hour:$minute $ampm"
+        val hour = if(this.hour <= 12) { this.hour } else { this.hour - 12 }
+        val ampm = if(this.hour <= 12) { "AM" } else { "PM" }
+        return "${hour.makeTwoDigit()}:${minute.makeTwoDigit()} $ampm"
     }
 
 
