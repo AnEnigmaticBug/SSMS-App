@@ -15,6 +15,7 @@
         android:background="@drawable/sh_half_left_rounded_rectangle_16dp"
         android:backgroundTint="@color/pnk01"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
