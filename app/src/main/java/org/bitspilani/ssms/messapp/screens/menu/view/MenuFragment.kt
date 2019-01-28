@@ -72,6 +72,7 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
 
     override fun onDatePicked(id: Long) {
         viewModel.onPickDateAction(id)
+        view?.mealsRCY?.smoothScrollToPosition(0)
     }
 
     override fun onItemRated(id: Id, rating: Rating) {
