@@ -65,7 +65,7 @@ class MenuRepositoryImpl(
         }
 
         return dataSource
-            .filter { it.isNotEmpty() }
+            .filter { _items -> _items.isNotEmpty() && _items.maxBy { it.date }!!.date >= LocalDate.now() }
             .map { _items ->
                 _items.map { it.toCoreLayer() }
             }

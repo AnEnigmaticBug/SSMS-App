@@ -17,6 +17,7 @@ import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMeal
 import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMenuItem
 import org.bitspilani.ssms.messapp.util.*
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
 
 class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
 
@@ -30,6 +31,14 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
 
     private val d1 = CompositeDisposable()
     private val d2 = CompositeDisposable()
+
+
+    object MealName {
+
+        const val Breakfast = "Breakfast"
+        const val Lunch     = "Lunch"
+        const val Dinner    = "Dinner"
+    }
 
 
     init {
@@ -53,9 +62,37 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     fun onRateItemAction(id: Id, rating: Rating) {
         check(order.value is UiOrder.ShowWorking) { "Item rated without WorkingState" }
 
-        if(pickedDate != LocalDate.now()) {
-            toast.toMut().postValue("You can only rate today's items")
-            return
+        when(pickedDate) {
+            LocalDate.now().minusDays(1) -> {
+                // You can rate yesterday's items without any restriction.
+            }
+            LocalDate.now().minusDays(0) -> {
+                val meal = (order.value as UiOrder.ShowWorking).meals.firstOrNull { _meal -> _meal.items.any { it.id == id } }
+                when(meal?.name) {
+                    MealName.Breakfast -> {
+                        if(LocalTime.now() < LocalTime.of( 7, 30)) {
+                            toast.toMut().postValue("You can't rate a meal before eating")
+                            return
+                        }
+                    }
+                    MealName.Lunch     -> {
+                        if(LocalTime.now() < LocalTime.of(11, 30)) {
+                            toast.toMut().postValue("You can't rate a meal before eating")
+                            return
+                        }
+                    }
+                    MealName.Dinner    -> {
+                        if(LocalTime.now() < LocalTime.of(18, 30)) {
+                            toast.toMut().postValue("You can't rate a meal before eating")
+                            return
+                        }
+                    }
+                }
+            }
+            else                                       -> {
+                toast.toMut().value = "You're not allowed to rate this day's items"
+                return
+            }
         }
 
         d2.set(mRepo.rateMenuItemWithId(id, rating)
@@ -100,7 +137,6 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
             ))
     }
 
-
     private fun List<LocalDate>.toViewLayerDates(pickedDate: LocalDate): List<ViewLayerDate> {
 
         fun LocalDate.toViewLayer(isSelected: Boolean): ViewLayerDate {
@@ -115,9 +151,9 @@ class MenuViewModel(private val mRepo: MenuRepository) : ViewModel() {
     private fun List<MenuItem>.toViewLayerMeals(): List<ViewLayerMeal> {
         return this.groupBy { it.meal }.map {
             val name = when(it.key) {
-                Meal.BreakFast -> "Breakfast"
-                Meal.Lunch     -> "Lunch"
-                Meal.Dinner    -> "Dinner"
+                Meal.BreakFast -> MealName.Breakfast
+                Meal.Lunch     -> MealName.Lunch
+                Meal.Dinner    -> MealName.Dinner
             }
 
             return@map ViewLayerMeal(name, it.value.map { ViewLayerMenuItem(it.id, it.name, it.rating) })

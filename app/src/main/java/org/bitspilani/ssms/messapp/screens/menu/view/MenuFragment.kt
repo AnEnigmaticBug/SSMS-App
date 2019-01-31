@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fra_menu_working_state.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.login.view.LoginActivity
@@ -26,6 +27,9 @@ import org.bitspilani.ssms.messapp.screens.menu.view.model.ViewLayerMeal
 class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.RateItemListener {
 
     private lateinit var viewModel: MenuViewModel
+
+    // True when the dates bar has been swiped at-least once.
+    private var isDatesBarSwiped = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProviders.of(this, MenuViewModelFactory())[MenuViewModel::class.java]
@@ -47,6 +51,14 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
 
         rootPOV.rightBTN.setOnClickListener {
             rootPOV.datesRCY.smoothScrollBy(+500, 0)
+        }
+
+        rootPOV.datesRCY.onFlingListener = object : RecyclerView.OnFlingListener() {
+
+            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
+                isDatesBarSwiped = true
+                return false
+            }
         }
 
         viewModel.order.observe(this, Observer {
@@ -72,7 +84,6 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
 
     override fun onDatePicked(id: Long) {
         viewModel.onPickDateAction(id)
-        view?.mealsRCY?.smoothScrollToPosition(0)
     }
 
     override fun onItemRated(id: Id, rating: Rating) {
@@ -84,6 +95,10 @@ class MenuFragment : Fragment(), DatesAdapter.PickDateListener, MealsAdapter.Rat
     }
 
     private fun showWorkingState(dates: List<ViewLayerDate>, meals: List<ViewLayerMeal>) {
+        if(!isDatesBarSwiped) {
+            view!!.datesRCY.scrollToPosition(dates.indexOfFirst { it.isSelected })
+        }
+
         (view as ConstraintLayout).setState(R.id.working, 0, 0)
         (view!!.datesRCY.adapter as DatesAdapter).dates = dates
         (view!!.mealsRCY.adapter as MealsAdapter).meals = meals
