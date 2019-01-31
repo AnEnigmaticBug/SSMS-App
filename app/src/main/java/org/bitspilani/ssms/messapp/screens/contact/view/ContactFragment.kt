@@ -1,9 +1,12 @@
 package org.bitspilani.ssms.messapp.screens.contact.view
 
+import android.content.Context
 import android.os.Bundle
+import android.text.ClipboardManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,7 +20,7 @@ import org.bitspilani.ssms.messapp.screens.contact.view.adapters.ContactsAdapter
 import org.bitspilani.ssms.messapp.screens.contact.view.model.UiOrder
 import org.bitspilani.ssms.messapp.screens.contact.view.model.ViewLayerContact
 
-class ContactFragment : Fragment() {
+class ContactFragment : Fragment(), ContactsAdapter.ClickListener {
 
     private lateinit var viewModel: ContactViewModel
 
@@ -28,7 +31,7 @@ class ContactFragment : Fragment() {
 
         (rootPOV as ConstraintLayout).loadLayoutDescription(R.xml.ctl_states_fra_contact)
 
-        rootPOV.contactsRCY.adapter = ContactsAdapter()
+        rootPOV.contactsRCY.adapter = ContactsAdapter(this)
 
         rootPOV.backBTN.setOnClickListener {
             findNavController().popBackStack()
@@ -47,6 +50,14 @@ class ContactFragment : Fragment() {
         })
 
         return rootPOV
+    }
+
+    override fun onPhoneNumberClicked(phone: String) {
+        val clipboard = context?.applicationContext?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        clipboard?.let {
+            it.text = phone
+            Toast.makeText(context, "Copied phone number :)", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showLoadingState() {

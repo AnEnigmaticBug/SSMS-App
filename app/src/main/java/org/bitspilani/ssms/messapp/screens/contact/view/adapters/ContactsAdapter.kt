@@ -13,7 +13,12 @@ import kotlinx.android.synthetic.main.row_contacts_rcy.view.*
 import org.bitspilani.ssms.messapp.R
 import org.bitspilani.ssms.messapp.screens.contact.view.model.ViewLayerContact
 
-class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactVHolder>() {
+class ContactsAdapter(private val listener: ClickListener) : RecyclerView.Adapter<ContactsAdapter.ContactVHolder>() {
+
+    interface ClickListener {
+
+        fun onPhoneNumberClicked(phone: String)
+    }
 
     var contacts = listOf<ViewLayerContact>()
         set(value) {
@@ -34,6 +39,10 @@ class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactVHolder>() {
         holder.nameLBL.text = contact.name
         holder.postLBL.text = contact.post
         holder.phoneLBL.text = contact.phone
+
+        holder.phoneLBL.setOnClickListener {
+            listener.onPhoneNumberClicked(contact.phone)
+        }
 
         val context = holder.rootPOV.context
 
