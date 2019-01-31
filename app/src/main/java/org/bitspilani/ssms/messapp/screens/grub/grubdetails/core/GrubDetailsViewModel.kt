@@ -67,7 +67,10 @@ class GrubDetailsViewModel(private val id: Id, private val gRepo: GrubRepository
                 {
                     when(it) {
                         is NoLoggedUserException -> order.toMut().postValue(UiOrder.MoveToLogin)
-                        else                     -> toast.toMut().postValue(it.getMessage())
+                        else                     -> {
+                            retrieveData()
+                            toast.toMut().postValue(it.getMessage())
+                        }
                     }
                 }
             )
