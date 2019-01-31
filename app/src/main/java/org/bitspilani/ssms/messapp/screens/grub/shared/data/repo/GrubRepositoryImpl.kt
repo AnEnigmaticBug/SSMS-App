@@ -72,7 +72,8 @@ class GrubRepositoryImpl(
                     put("ids", JSONArray(listOf(grubsDao.getGrubBatchId(id, type))))
                 }.toRequestBody()
                 grubService.signUpGrub(_user.jwt, body)
-                    .andThen(fetchAndUpdateTickets(_user.jwt))
+                    .map { _response -> _response.getBody() }
+                    .flatMapCompletable { fetchAndUpdateGrubs() }
             }
             .subscribeOn(Schedulers.io())
     }
@@ -84,7 +85,8 @@ class GrubRepositoryImpl(
                     put("id", grubsDao.getTicketIdForGrubOfId(id))
                 }.toRequestBody()
                 grubService.cancelGrub(_user.jwt, body)
-                    .andThen(fetchAndUpdateTickets(_user.jwt))
+                    .map { _response -> _response.getBody() }
+                    .flatMapCompletable { fetchAndUpdateGrubs() }
             }
             .subscribeOn(Schedulers.io())
     }
