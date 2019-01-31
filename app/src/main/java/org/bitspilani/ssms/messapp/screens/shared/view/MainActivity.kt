@@ -2,6 +2,7 @@ package org.bitspilani.ssms.messapp.screens.shared.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -60,7 +61,12 @@ class MainActivity : AppCompatActivity() {
 
             setDefaultBackgroundResource(R.drawable.sh_rounded_rectangle_wht01_16dp)
 
-            setTitleTypeface(ResourcesCompat.getFont(context, R.font.cabin))
+            // In case the font couldn't be downloaded.
+            try {
+                setTitleTypeface(ResourcesCompat.getFont(context, R.font.cabin))
+            } catch(e: Exception) {
+                Toast.makeText(context, "Unable to download fonts. Please restart the app.", Toast.LENGTH_SHORT).show()
+            }
 
             setOnTabSelectedListener { position, wasSelected ->
                 if(wasSelected) {
