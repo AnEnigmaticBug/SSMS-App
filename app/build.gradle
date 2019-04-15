@@ -14,9 +14,17 @@ android {
         applicationId "org.bitspilani.ssms.messapp"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 7
+        versionName "1.0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        release {
+            storeFile file("/home/nishant/Documents/Coding/Android/ssms/keystore.jks")
+            storePassword "empoweringssms"
+            keyAlias "key0"
+            keyPassword "ssmsrandap"
+        }
     }
     buildTypes {
         release {
