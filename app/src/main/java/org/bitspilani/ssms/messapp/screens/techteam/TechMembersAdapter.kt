@@ -17,7 +17,6 @@ class TechMembersAdapter : RecyclerView.Adapter<TechMembersAdapter.TechMemberVHo
     private data class TechMember(val name: String, val post: String, val pic: Int, val icon: Int)
 
     private val members = listOf(
-        TechMember("V Abishek\nBalaji", "Operations\nExecutive", R.drawable.im_abhishek, R.drawable.ic_bob_120dp_120dp),
         TechMember("Nishant\nMahajan", "App\nDeveloper", R.drawable.im_nishant, R.drawable.ic_app_dev_120dp_120dp),
         TechMember("Pratik\nBachhav", "UI & UX\nDesigner", R.drawable.im_pratik, R.drawable.ic_designer_120dp_120dp),
         TechMember("Divyam\nGoel", "Backend\nDeveloper", R.drawable.im_divyam, R.drawable.ic_backend_dev_120dp_120dp),
